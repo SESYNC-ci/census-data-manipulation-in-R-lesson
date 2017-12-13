@@ -6,5 +6,6 @@ library(magrittr)
 library(dplyr)
 
 cbp15 <- read.csv('~/censusdat/cbp15co.txt') %>%
-         select(FIPSSTATE, FIPSCTY, NAICS, EST)
+         select(FIPSTATE, FIPSCTY, NAICS, EST)
 
+test<- filter(cbp15, substr(NAICS, 3, 4)=='----')
