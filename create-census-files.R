@@ -6,42 +6,46 @@ library(magrittr)
 library(dplyr)
 
 # Select only identifiers and number of establishments
-cbp15 <- read.csv('~/censusdat/cbp15co.txt') %>%
-         select(FIPSTATE, FIPSCTY, NAICS, EST)
+cbp15 <- read.csv('data/cbp15co.txt') %>%
+  select(FIPSTATE, FIPSCTY, NAICS, EST)
 
 # Limit to two-digit NAICS and create new var with that two digits 
 # cbp15_2 has one record per county per 2-digit NAICS, where EST for the code !=0
 cbp15_2 <- filter(cbp15, substr(NAICS, 3, 6)=='----') %>%
-       mutate(naics = as.numeric((ifelse(substr(NAICS,1,2) != '--', substr(NAICS,1,2), 0)))) %>%
-       select(-NAICS)
-  
+  mutate(naics = as.numeric((ifelse(substr(NAICS,1,2) != '--', substr(NAICS,1,2), 0)))) %>%
+  select(-NAICS)
+
 # TODO: Make a new variable that combines state and county fips by combining and padding the
 # two separate vars
+
+cbp15_2 <- cbp15_2 %>%
+  mutate(chrFIPSCTY = substr(paste("00", as.character(FIPSCTY), sep = ""), nchar(as.character(FIPSCTY)), nchar(paste("00", as.character(FIPSCTY), sep = "")))) %>%
+  mutate(combinedFIPS = as.numeric(paste(as.character(FIPSTATE), chrFIPSCTY, sep = "")))
 
 
 # Create data set of NAICS codes
 naics <- c(11,21,22,23,31,42,44,48,51,52,53,54,55,56,61,62,71,72,81,92,0)
 naicsTxt <- c('Agriculture, Forestry, Fishing and Hunting',
-       'Mining',
-       'Utilities',
-       'Construction',
-       'Manufacturing',
-       'Wholesale Trade',
-       'Retail Trade',
-       'Transportation and Warehousing',
-       'Information',
-       'Finance and Insurance',
-       'Real Estate Rental and Leasing',
-       'Professional, Scientific, and Technical Services',
-       'Management of Companies and Enterprises',
-       'Administrative and Support and Waste Management and Remediation Services',
-       'Educational Services',
-       'Health Care and Social Assistance',
-       'Arts, Entertainment, and Recreation',
-       'Accommodation and Food Services',
-       'Other Services (except Public Administration)',
-       'Public Administration',
-       'TOTAL')
+              'Mining',
+              'Utilities',
+              'Construction',
+              'Manufacturing',
+              'Wholesale Trade',
+              'Retail Trade',
+              'Transportation and Warehousing',
+              'Information',
+              'Finance and Insurance',
+              'Real Estate Rental and Leasing',
+              'Professional, Scientific, and Technical Services',
+              'Management of Companies and Enterprises',
+              'Administrative and Support and Waste Management and Remediation Services',
+              'Educational Services',
+              'Health Care and Social Assistance',
+              'Arts, Entertainment, and Recreation',
+              'Accommodation and Food Services',
+              'Other Services (except Public Administration)',
+              'Public Administration',
+              'TOTAL')
 naicsDat<-data.frame(cbind(naics,naicsTxt))
 
 # TODO: decide whether to make naics code numeric to match cbp15_2
@@ -49,6 +53,7 @@ naicsDat<-data.frame(cbind(naics,naicsTxt))
 
 # TODO: Create data set of county names to merge 
 
-
-
-
+county <- read.csv("data/national_county.txt") %>%
+  mutate(COUNTY_ST = paste(COUNTY, STATE, sep = ", ")) %>%
+  mutate(chrFIPSCTY = substr(paste("00", as.character(FIPSCTY), sep = ""), nchar(as.character(FIPSCTY)), nchar(paste("00", as.character(FIPSCTY), sep = "")))) %>%
+  mutate(combinedFIPS = as.numeric(paste(as.character(FIPSTATE), chrFIPSCTY, sep = "")))
