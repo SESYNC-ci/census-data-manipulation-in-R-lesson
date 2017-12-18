@@ -17,7 +17,7 @@ cbp15_2 <- filter(cbp15, substr(NAICS, 3, 6)=='----') %>%
   
 # TODO: Make a new variable that combines state and county fips by combining and padding the
 # two separate vars
-
+head()
 
 # Create data set of NAICS codes
 naics <- c(11,21,22,23,31,42,44,48,51,52,53,54,55,56,61,62,71,72,81,92,0)
