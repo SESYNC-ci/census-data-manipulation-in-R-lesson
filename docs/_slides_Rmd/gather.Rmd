@@ -1,4 +1,7 @@
 ---
+# Would like to do a better demonstration of EAV data versus long data.
+# difference being that a single observation (with multiple values) may
+# be spread across multiple rows in EAV model.
 ---
 
 ## Gather

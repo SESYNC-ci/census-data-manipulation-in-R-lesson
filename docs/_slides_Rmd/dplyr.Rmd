@@ -1,4 +1,5 @@
 ---
+# filter by NAICS
 ---
 
 ## Key dplyr functions
@@ -11,14 +12,14 @@
 | `mutate`    | apply a transformation to existing [split] columns |
 | `summarize` | summarize across rows [and combine split groups]   |
 
-The table above presents the most commonly used functions in [dplyr](){:.rlib}, which we will demonstrate in turn, starting from the `animals` data frame.
+The table above presents the most commonly used functions in [dplyr](){:.rlib}, which we will demonstrate in turn, starting from the `cbp` data frame.
 {:.notes}
 
 ===
 
 ## Subsetting
 
-The animals table includes numeric `year` and `month` columns. Of the 35,549 observations, lets see how many observations are left when we keep only observations from the first three months of 1990.
+The cbp table includes numeric `year` and `month` columns. Of the 35,549 observations, lets see how many observations are left when we keep only observations from the first three months of 1990.
 
 ```{r lib, message = FALSE, title = '{{ site.handouts[0] }}'}
 library(dplyr)
@@ -47,7 +48,7 @@ Note that a logical "and" is implied when conditions are separated by commas. (T
 To keep particular columns of a data frame (rather than choosing rows) , use the `select` with arguments that match the column names.
 
 ```{r}
-colnames(animals)
+names(cbp)
 ```
 
 ===
