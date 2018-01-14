@@ -3228,7 +3228,7 @@ select(cbp_construction, starts_with('FIPS'), starts_with('AP'))
 
 
 ~~~r
-cbp_health_care_by_state <- cbp_health_care %>%
+state_cbp_health_care <- cbp_health_care %>%
   group_by(FIPSTATE, FIPSCTY) %>%
   summarize(EMP = sum(EMP)) %>%
   summarize(EMP = sum(EMP), counties = n())
@@ -3238,6 +3238,7 @@ cbp_health_care_by_state <- cbp_health_care %>%
 [Return](#exercise-3)
 {:.notes}
 
+<!--
 ===
 
 ## Solution 4
@@ -3256,3 +3257,4 @@ Error in group_by(animals, species_id, month): object 'animals' not found
 
 [Return](#exercise-3)
 {:.notes}
+-->
