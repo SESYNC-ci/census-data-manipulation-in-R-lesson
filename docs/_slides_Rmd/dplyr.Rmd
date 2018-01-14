@@ -19,7 +19,7 @@ The table above presents the most commonly used functions in [dplyr](){:.rlib}, 
 
 ## Subsetting
 
-The cbp table includes numeric `year` and `month` columns. Of the 35,549 observations, lets see how many observations are left when we keep only observations from the first three months of 1990.
+The cbp table includes character `NAICS` column. Of the 2 million observations, lets see how many observations are left when we keep only observations from the Health Care and Social Assistance sector.
 
 ```{r lib, message = FALSE, title = '{{ site.handouts[0] }}'}
 library(dplyr)
@@ -28,19 +28,35 @@ library(dplyr)
 ===
 
 ```{r filter, title = '{{ site.handouts[0] }}'}
-animals_1990_winter <- filter(
-  animals,
-  year == 1990,
-  month %in% 1:3)
+cbp_health_care <- filter(
+  cbp,
+  NAICS == '62----')
 ```
 
 ===
 
+That may not be what we wanted, because it's the aggregated data.
+
 ```{r view_filter}
-str(animals_1990_winter)
+str(cbp_health_care)
 ```
 
-Note that a logical "and" is implied when conditions are separated by commas. (This is perhaps the main way in which `filter` differs from the base R `subset` function.) Therefore, the example above is equivalent to `filter(animals, year == 1990 & month %in% 1:3)`. A logical "or" must be specified explicitly with the `|` operator.
+===
+
+```{r filter_more, title = '{{ site.handouts[0] }}', warning = FALSE}
+library(stringr)
+cbp_health_care <- filter(
+  cbp,
+  str_detect(NAICS, '^62'),
+  !is.na(as.integer(NAICS))
+  )
+```
+
+Note that a logical "and" is implied when conditions are separated by commas.
+(This is perhaps the main way in which `filter` differs from the base R `subset`
+function.) Therefore, the example above is equivalent to `filter(cbp,
+str_detect(NAICS, '^62') & !is.na(as.integer(NAICS)))`. A logical "or" must be
+specified explicitly with the `|` operator.
 {:.notes}
 
 ===
@@ -56,28 +72,29 @@ names(cbp)
 One way to "match" is by including complete names, each one you want to keep:
 
 ```{r eval=FALSE}
-select(animals_1990_winter,
-  id, month, day, plot_id,
-  species_id, sex, hindfoot_length, weight)
+select(cbp_health_care,
+  FIPSTATE, FIPSCTY,
+  NAICS,
+  EMPFLAG, EMP_NF, EMP
+)
 ```
 
 ===
 
-Alternatively, we can use a negative "match": keep columns that do not match the name preceded by minus sing.
+Alternatively, we can use a "select helper"" to match patterns.
 
 ```{r select, title = '{{ site.handouts[0] }}'}
-animals_1990_winter <- select(
-  animals_1990_winter,
-  -year)
+cbp_health_care <- select(cbp_health_care,
+  starts_with('FIPS'),
+  NAICS,
+  starts_with('EMP')
+)
 ```
-
-Use this option to remove a single column from a data frame.
-{:.notes}
 
 ===
 
 ```{r view_select}
-str(animals_1990_winter)
+str(cbp_health_care)
 ```
 
 <!--
@@ -97,15 +114,9 @@ head(sorted)
 
 ===
 
-![]({{ site.baseurl }}/images/img_4185.jpg){:width="40%"}  
-*Credit: [The Portal Project](https://portalproject.wordpress.com)*
-{:.captioned}
-
-===
-
 ## Exercise 2
 
-Write code that returns the `id`, `sex` and `weight` of all surveyed individuals of *Reithrodontomys montanus* (RO).
+Write code that returns the annual payroll data for the top level Construction sector ("23----").
 
 [View solution](#solution-2)
 {:.notes}

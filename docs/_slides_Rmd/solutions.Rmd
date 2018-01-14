@@ -19,8 +19,8 @@ gather(wide_counts, key = "species", value = "n", -site)
 ## Solution 2
 
 ```{r}
-animals_RO <- filter(animals, species_id == "RO")
-select(animals_RO, id, sex, weight)
+cbp_construction <- filter(cbp, NAICS == '23----')
+select(cbp_construction, starts_with('FIPS'), starts_with('AP'))
 ```
 
 [Return](#exercise-2)
@@ -31,11 +31,10 @@ select(animals_RO, id, sex, weight)
 ## Solution 3
 
 ```{r}
-filter(animals, species_id == "DM") %>%
-  group_by(month) %>%
-  summarize(
-    avg_wgt = mean(weight, na.rm = TRUE),
-    avg_hfl = mean(hindfoot_length, na.rm = TRUE))
+cbp_health_care_by_state <- cbp_health_care %>%
+  group_by(FIPSTATE, FIPSCTY) %>%
+  summarize(EMP = sum(EMP)) %>%
+  summarize(EMP = sum(EMP), counties = n())
 ```
 
 [Return](#exercise-3)

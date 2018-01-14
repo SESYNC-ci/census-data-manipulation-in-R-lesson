@@ -3,11 +3,20 @@
 
 ## Chaining functions
 
-All those functions from the dplyr package take a data frame as their first argument, and they return a data frame. This consistent syntax is on purpose. It is designed for easily chaining data transformations together: processing data frames in easy-to-read steps.
+All those functions from the [dplyr](){:.rpkg} package take a data frame as
+their first argument, and they return a data frame. This consistent syntax is on
+purpose. It is designed for easily chaining data transformations together:
+processing data frames in easy-to-read steps.
 
 ===
 
-The "pipe" operator (`%>%`) from the [magrittr](){:.rpkg} package is loaded by dplyr. The pipe takes the expression on its left-hand side and hands it over as the first argument to the function on its right-hand side.
+The "pipe" operator (`%>%`) from the [magrittr](){:.rpkg} package is loaded by
+[dplyr](){:.rpkg} The pipe takes the expression on its left-hand side and hands
+it over as the first argument to the function on its right-hand side.
+
+```{r magrittr, result = 'hide'}
+library(magrittr)
+```
 
 ===
 
@@ -27,18 +36,25 @@ c(1, 3, 5, NA) %>% sum(na.rm = TRUE)
 
 ===
 
-The pipe operator's main utility is to condense a chain of operations applied to the same piece of data, when you don't need to save the intermediate results. We can do both the filter and select operations from above with one assignment.
+The pipe operator's main utility is to condense a chain of operations applied to
+the same piece of data, when you don't need to save the intermediate results. We
+can do both the filter and select operations from above with one assignment.
 
 ===
 
-```{r title = '{{ site.handouts[0] }}'}
-animals_1990_winter <- animals %>%
-    filter(year == 1990, month %in% 1:3) %>%
-    select(-year)
+```{r title = '{{ site.handouts[0] }}', warning = FALSE}
+cbp_health_care <- cbp %>%
+  filter(
+    str_detect(NAICS, '^62'),
+    !is.na(as.integer(NAICS))) %>%
+  select(
+    starts_with('FIPS'),
+    NAICS,
+    starts_with('EMP'))
 ```
 
 ===
 
 ```{r}
-str(animals_1990_winter)
+str(cbp_health_care)
 ```

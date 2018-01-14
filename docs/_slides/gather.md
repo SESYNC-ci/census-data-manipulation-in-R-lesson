@@ -1,4 +1,7 @@
 ---
+# Would like to do a better demonstration of EAV data versus long data.
+# difference being that a single observation (with multiple values) may
+# be spread across multiple rows in EAV model.
 ---
 
 ## Gather
@@ -8,8 +11,10 @@ The [tidyr](){:.rlib} package's `gather` function reshapes "wide" data frames in
 
 ~~~r
 library(tidyr)
-tidy_response <- gather(response, key = "treatment",
-  value = "response", -trial)
+tidy_response <- gather(response,
+  key = "treatment",
+  value = "response",
+  -trial)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
@@ -124,7 +129,10 @@ wide_counts
 
 ## Exercise 1
 
-Now that we have a wide form of counts, convert it to a `tidy_counts` data frame using `gather`. The only difference between `counts` and `tidy_counts` should be the additional row for zero lynx at site 2. Remember, a tidy dataset has a row for every observation, even if the value is "implied".
+Now that we have a wide form of counts, convert it to a `tidy_counts` data frame
+using `gather`. The only difference between `counts` and `tidy_counts` should be
+the additional row for zero lynx at site 2. Remember, a tidy dataset has a row
+for every observation, even if the value is "implied".
 
 [View solution](#solution-1)
 {:.notes}

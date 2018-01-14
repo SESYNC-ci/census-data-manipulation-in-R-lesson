@@ -1,9 +1,13 @@
 ---
+# group by NAICS, sum across county
 ---
 
 ## Split-apply-combine
 
-A very common data manipulation procedure is doing some "group-wise" operations on a dataset and combing the results for each group into a single table. For example, say you need to count the number of individuals *of each species* observed in the winter of 1990.
+A very common data manipulation procedure is doing some "group-wise" operations
+on a dataset and combing the results for each group into a single table. For
+example, say you need to sum the number of employees *in each state* observed in
+the health care sector?
 
 ===
 
@@ -13,8 +17,8 @@ The dplyr function `group_by` begins the process by indicating how the data fram
 
 
 ~~~r
-counts_1990_winter <- animals_1990_winter %>%
-    group_by(species_id)
+state_cbp_health_care <- cbp_health_care %>%
+    group_by(FIPSTATE)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
@@ -24,65 +28,99 @@ At this point, nothing has really changed:
 
 
 ~~~r
-str(counts_1990_winter)
+str(state_cbp_health_care)
 ~~~
 {:.input}
 ~~~
-Classes 'grouped_df', 'tbl_df', 'tbl' and 'data.frame':	491 obs. of  8 variables:
- $ id             : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
- $ month          : int  1 1 1 1 1 1 1 1 1 1 ...
- $ day            : int  6 6 6 6 6 6 6 6 6 6 ...
- $ plot_id        : int  1 1 6 23 12 24 12 24 12 17 ...
- $ species_id     : Factor w/ 48 levels "AB","AH","AS",..: 12 17 23 33 33 33 38 39 38 13 ...
- $ sex            : Factor w/ 2 levels "F","M": 1 2 2 1 2 2 2 1 2 2 ...
- $ hindfoot_length: int  37 21 16 17 17 17 25 30 28 36 ...
- $ weight         : int  35 28 7 9 10 9 35 73 44 55 ...
- - attr(*, "vars")= chr "species_id"
+Classes 'grouped_df', 'tbl_df', 'tbl' and 'data.frame':	63231 obs. of  7 variables:
+ $ FIPSTATE: chr  "01" "01" "01" "01" ...
+ $ FIPSCTY : chr  "001" "001" "001" "001" ...
+ $ NAICS   : chr  "621111" "621210" "621310" "621320" ...
+ $ EMPFLAG : chr  NA NA NA NA ...
+ $ EMP_NF  : chr  "G" "H" "G" "J" ...
+ $ EMP     : int  156 95 27 36 31 0 0 0 0 0 ...
+ $ FIPS    : chr  "01001" "01001" "01001" "01001" ...
+ - attr(*, "vars")= chr "FIPSTATE"
  - attr(*, "drop")= logi TRUE
- - attr(*, "indices")=List of 20
-  ..$ : int  13 46 88 102 103 108 113 114 121 127 ...
-  ..$ : int  22 141 147 325
-  ..$ : int  72 295 311
-  ..$ : int  0 33 35 51 56 60 63 64 66 67 ...
-  ..$ : int  9 12 20 27 41 42 44 49 53 54 ...
-  ..$ : int  79 99 228 352 409 474
-  ..$ : int  37 116 254 258 267 285 351 396 402 438
-  ..$ : int  1 24 157 164 273 278 420
-  ..$ : int  11 14 15 48 62 82 137 152 185 194 ...
-  ..$ : int  243 283 296 302 320 332 340
-  ..$ : int  32 47 58 76 109 110 112 118 142 165 ...
-  ..$ : int  2 36 45 105 120 123 144 174 237 246 ...
-  ..$ : int  136 140 146 148
-  ..$ : int  145 276 393
-  ..$ : int 80
-  ..$ : int  52 59 124 135 225 233 312 373 425 433
-  ..$ : int  3 4 5 17 19 21 23 25 26 28 ...
-  ..$ : int  6 8 10 16 18 111 119 138 248 252 ...
-  ..$ : int  7 50 291 293 421 448 480
-  ..$ : int 104
- - attr(*, "group_sizes")= int  25 4 3 132 65 6 10 7 22 7 ...
- - attr(*, "biggest_group_size")= int 132
- - attr(*, "labels")='data.frame':	20 obs. of  1 variable:
-  ..$ species_id: Factor w/ 48 levels "AB","AH","AS",..: 1 2 4 12 13 14 16 17 18 21 ...
-  ..- attr(*, "vars")= chr "species_id"
+ - attr(*, "indices")=List of 51
+  ..$ : int  0 1 2 3 4 5 6 7 8 9 ...
+  ..$ : int  1394 1395 1396 1397 1398 1399 1400 1401 1402 1403 ...
+  ..$ : int  1741 1742 1743 1744 1745 1746 1747 1748 1749 1750 ...
+  ..$ : int  2181 2182 2183 2184 2185 2186 2187 2188 2189 2190 ...
+  ..$ : int  3581 3582 3583 3584 3585 3586 3587 3588 3589 3590 ...
+  ..$ : int  5322 5323 5324 5325 5326 5327 5328 5329 5330 5331 ...
+  ..$ : int  6465 6466 6467 6468 6469 6470 6471 6472 6473 6474 ...
+  ..$ : int  6749 6750 6751 6752 6753 6754 6755 6756 6757 6758 ...
+  ..$ : int  6860 6861 6862 6863 6864 6865 6866 6867 6868 6869 ...
+  ..$ : int  6899 6900 6901 6902 6903 6904 6905 6906 6907 6908 ...
+  ..$ : int  8760 8761 8762 8763 8764 8765 8766 8767 8768 8769 ...
+  ..$ : int  11516 11517 11518 11519 11520 11521 11522 11523 11524 11525 ...
+  ..$ : int  11653 11654 11655 11656 11657 11658 11659 11660 11661 11662 ...
+  ..$ : int  12396 12397 12398 12399 12400 12401 12402 12403 12404 12405 ...
+  ..$ : int  14431 14432 14433 14434 14435 14436 14437 14438 14439 14440 ...
+  ..$ : int  16536 16537 16538 16539 16540 16541 16542 16543 16544 16545 ...
+  ..$ : int  18331 18332 18333 18334 18335 18336 18337 18338 18339 18340 ...
+  ..$ : int  19824 19825 19826 19827 19828 19829 19830 19831 19832 19833 ...
+  ..$ : int  21935 21936 21937 21938 21939 21940 21941 21942 21943 21944 ...
+  ..$ : int  23265 23266 23267 23268 23269 23270 23271 23272 23273 23274 ...
+  ..$ : int  23720 23721 23722 23723 23724 23725 23726 23727 23728 23729 ...
+  ..$ : int  24460 24461 24462 24463 24464 24465 24466 24467 24468 24469 ...
+  ..$ : int  24943 24944 24945 24946 24947 24948 24949 24950 24951 24952 ...
+  ..$ : int  26883 26884 26885 26886 26887 26888 26889 26890 26891 26892 ...
+  ..$ : int  28674 28675 28676 28677 28678 28679 28680 28681 28682 28683 ...
+  ..$ : int  30011 30012 30013 30014 30015 30016 30017 30018 30019 30020 ...
+  ..$ : int  32214 32215 32216 32217 32218 32219 32220 32221 32222 32223 ...
+  ..$ : int  32974 32975 32976 32977 32978 32979 32980 32981 32982 32983 ...
+  ..$ : int  34037 34038 34039 34040 34041 34042 34043 34044 34045 34046 ...
+  ..$ : int  34314 34315 34316 34317 34318 34319 34320 34321 34322 34323 ...
+  ..$ : int  34623 34624 34625 34626 34627 34628 34629 34630 34631 34632 ...
+  ..$ : int  35375 35376 35377 35378 35379 35380 35381 35382 35383 35384 ...
+  ..$ : int  36045 36046 36047 36048 36049 36050 36051 36052 36053 36054 ...
+  ..$ : int  37909 37910 37911 37912 37913 37914 37915 37916 37917 37918 ...
+  ..$ : int  40404 40405 40406 40407 40408 40409 40410 40411 40412 40413 ...
+  ..$ : int  40982 40983 40984 40985 40986 40987 40988 40989 40990 40991 ...
+  ..$ : int  43357 43358 43359 43360 43361 43362 43363 43364 43365 43366 ...
+  ..$ : int  44780 44781 44782 44783 44784 44785 44786 44787 44788 44789 ...
+  ..$ : int  45668 45669 45670 45671 45672 45673 45674 45675 45676 45677 ...
+  ..$ : int  47683 47684 47685 47686 47687 47688 47689 47690 47691 47692 ...
+  ..$ : int  47848 47849 47850 47851 47852 47853 47854 47855 47856 47857 ...
+  ..$ : int  48936 48937 48938 48939 48940 48941 48942 48943 48944 48945 ...
+  ..$ : int  49662 49663 49664 49665 49666 49667 49668 49669 49670 49671 ...
+  ..$ : int  51573 51574 51575 51576 51577 51578 51579 51580 51581 51582 ...
+  ..$ : int  55568 55569 55570 55571 55572 55573 55574 55575 55576 55577 ...
+  ..$ : int  56101 56102 56103 56104 56105 56106 56107 56108 56109 56110 ...
+  ..$ : int  56449 56450 56451 56452 56453 56454 56455 56456 56457 56458 ...
+  ..$ : int  59014 59015 59016 59017 59018 59019 59020 59021 59022 59023 ...
+  ..$ : int  60005 60006 60007 60008 60009 60010 60011 60012 60013 60014 ...
+  ..$ : int  61077 61078 61079 61080 61081 61082 61083 61084 61085 61086 ...
+  ..$ : int  62760 62761 62762 62763 62764 62765 62766 62767 62768 62769 ...
+ - attr(*, "group_sizes")= int  1394 347 440 1400 1741 1143 284 111 39 1861 ...
+ - attr(*, "biggest_group_size")= int 3995
+ - attr(*, "labels")='data.frame':	51 obs. of  1 variable:
+  ..$ FIPSTATE: chr  "01" "02" "04" "05" ...
+  ..- attr(*, "vars")= chr "FIPSTATE"
   ..- attr(*, "drop")= logi TRUE
 ~~~
 {:.output}
 
-The `group_by` statement does not change any values in the data frame; it only adds attributes to the the original data frame. You can add multiple variables (separated by commas) in `group_by`; each distinct combination of values across these columns defines a different group.
+The `group_by` statement does not change any values in the data frame; it only
+adds attributes to the the original data frame. You can add multiple variables
+(separated by commas) in `group_by`; each distinct combination of values across
+these columns defines a different group.
 {:.notes}
 
 ===
 
 ## Summarize
 
-The operation to perform on each species is counting: we need to count how many records are in each group.
+The operation to perform on each species is summing: we need to sum employment
+are in each group.
 
 
 ~~~r
-counts_1990_winter <- animals_1990_winter %>%
-    group_by(species_id) %>%
-    summarize(count = n())
+state_cbp_health_care <- cbp_health_care %>%
+    group_by(FIPSTATE) %>%
+    summarize(EMP = sum(EMP))
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
@@ -90,13 +128,13 @@ counts_1990_winter <- animals_1990_winter %>%
 
 
 ~~~r
-str(counts_1990_winter)
+str(state_cbp_health_care)
 ~~~
 {:.input}
 ~~~
-Classes 'tbl_df', 'tbl' and 'data.frame':	20 obs. of  2 variables:
- $ species_id: Factor w/ 48 levels "AB","AH","AS",..: 1 2 4 12 13 14 16 17 18 21 ...
- $ count     : int  25 4 3 132 65 6 10 7 22 7 ...
+Classes 'tbl_df', 'tbl' and 'data.frame':	51 obs. of  2 variables:
+ $ FIPSTATE: chr  "01" "02" "04" "05" ...
+ $ EMP     : int  162202 35063 325251 114101 1789324 240330 262599 60290 65472 950356 ...
 ~~~
 {:.output}
 
@@ -110,29 +148,32 @@ The function `n()` takes no arguments and returns the number of records in a gro
 
 
 ~~~r
-weight_1990_winter <- animals_1990_winter %>%
-    group_by(species_id) %>%
-    summarize(avg_weight = mean(weight, na.rm = TRUE))
+state_cbp_health_care <- cbp_health_care %>%
+    group_by(FIPSTATE) %>%
+    summarize(EMP = sum(EMP),
+              counties = n())
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
 ===
 
+But `group_by` can't read your mind, so be careful to type what you mean! 
+
 
 ~~~r
-head(weight_1990_winter)
+head(state_cbp_health_care)
 ~~~
 {:.input}
 ~~~
-# A tibble: 6 x 2
-  species_id avg_weight
-      <fctr>      <dbl>
-1         AB        NaN
-2         AH        NaN
-3         BA   7.666667
-4         DM  43.372093
-5         DO  48.222222
-6         DS 130.000000
+# A tibble: 6 x 3
+  FIPSTATE     EMP counties
+  <chr>      <int>    <int>
+1 01        162202     1394
+2 02         35063      347
+3 04        325251      440
+4 05        114101     1400
+5 06       1789324     1741
+6 08        240330     1143
 ~~~
 {:.output}
 
@@ -140,64 +181,10 @@ head(weight_1990_winter)
 
 ## Exercise 3
 
-Write code that returns the average hindfoot length of *Dipodomys merriami* (DM) individuals observed in each month (irrespective of the year). Make sure to exclude *NA* values.
+Write code that fixes `state_cbp_health_care`, which should show the number
+of counties and the total employment. Group the data using **both** `FIPSTATE`
+and `FIPSCTY` and use the fact that a call to `summarize` only combines across
+the lowest level of grouping.
 
 [View solution](#solution-3)
 {:.notes}
-
-===
-
-## Transformation of variables
-
-The `mutate` function creates new columns from existing ones. The data frame returned has an additional column for each argument to `mutate`, unless a name is reused. Overwriting an existing column does not generate a warning.
-
-===
-
-The `count` variable just defined, for example, can be used to calculate the proportion of individuals represented by each species.
-
-
-~~~r
-prop_1990_winter <- counts_1990_winter %>%
-    mutate(prop = count / sum(count))
-~~~
-{:.text-document title="{{ site.handouts[0] }}"}
-
-===
-
-
-~~~r
-head(prop_1990_winter)
-~~~
-{:.input}
-~~~
-# A tibble: 6 x 3
-  species_id count       prop
-      <fctr> <int>      <dbl>
-1         AB    25 0.05091650
-2         AH     4 0.00814664
-3         BA     3 0.00610998
-4         DM   132 0.26883910
-5         DO    65 0.13238289
-6         DS     6 0.01221996
-~~~
-{:.output}
-For a concise way to apply the same transformation to multiple columns, check the `mutate_each` function. There is also a `summarize_each` function to perform the same aggregation operation on multiple columns.
-{:.notes}
-
-===
-
-Both `mutate` and `summarize` can be used in the "apply" part of a "split-apply-combine" procedure. The difference is that the results are combine into data frames with differing numbers of rows.
-
-===
-
-Question
-: How many rows do you expect in the result of a `mutate` operation?
-
-Answer
-: {:.fragment} The same number you started with.
-
-===
-
-## Exercise 4
-
-A "pivot table" is a transformation of tidy data into a wide summary table. First, data are summarized by *two* grouping factors, then one of these is "pivoted" into columns. Starting from the `animals` data frame, chain a `group_by` and `summarize` transformation into a [tidyr](){:.rlib} `spread` function to get the number of individuals counted in each month (as three columns) by species (as rows).

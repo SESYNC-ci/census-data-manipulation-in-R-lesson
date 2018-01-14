@@ -1,0 +1,43 @@
+---
+# haven't modified yet
+---
+
+
+## Putting it all together
+
+The `mutate` function creates new columns from existing ones. The data frame returned has an additional column for each argument to `mutate`, unless a name is reused. Overwriting an existing column does not generate a warning.
+
+===
+
+The `count` variable just defined, for example, can be used to calculate the proportion of individuals represented by each species.
+
+```{r mutate, title="{{ site.handouts[0] }}"}
+prop_1990_winter <- counts_1990_winter %>%
+    mutate(prop = count / sum(count))
+```
+
+===
+
+```{r}
+head(prop_1990_winter)
+```
+For a concise way to apply the same transformation to multiple columns, check the `mutate_each` function. There is also a `summarize_each` function to perform the same aggregation operation on multiple columns.
+{:.notes}
+
+===
+
+Both `mutate` and `summarize` can be used in the "apply" part of a "split-apply-combine" procedure. The difference is that the results are combine into data frames with differing numbers of rows.
+
+===
+
+Question
+: How many rows do you expect in the result of a `mutate` operation?
+
+Answer
+: {:.fragment} The same number you started with.
+
+===
+
+## Exercise 4
+
+A "pivot table" is a transformation of tidy data into a wide summary table. First, data are summarized by *two* grouping factors, then one of these is "pivoted" into columns. Starting from the `animals` data frame, chain a `group_by` and `summarize` transformation into a [tidyr](){:.rlib} `spread` function to get the number of individuals counted in each month (as three columns) by species (as rows).

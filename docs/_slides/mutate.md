@@ -12,10 +12,12 @@ appends the result as a new column.
 
 Here's one you've probably needed before:
 
-```{r}
+
+~~~r
 cbp_health_care %<>% mutate(
   FIPS = str_c(FIPSTATE, FIPSCTY))
-```
+~~~
+{:.input}
 
 ===
 

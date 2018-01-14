@@ -1,4 +1,5 @@
 ---
+# filter by NAICS
 ---
 
 ## Key dplyr functions
@@ -11,14 +12,14 @@
 | `mutate`    | apply a transformation to existing [split] columns |
 | `summarize` | summarize across rows [and combine split groups]   |
 
-The table above presents the most commonly used functions in [dplyr](){:.rlib}, which we will demonstrate in turn, starting from the `animals` data frame.
+The table above presents the most commonly used functions in [dplyr](){:.rlib}, which we will demonstrate in turn, starting from the `cbp` data frame.
 {:.notes}
 
 ===
 
 ## Subsetting
 
-The animals table includes numeric `year` and `month` columns. Of the 35,549 observations, lets see how many observations are left when we keep only observations from the first three months of 1990.
+The cbp table includes character `NAICS` column. Of the 2 million observations, lets see how many observations are left when we keep only observations from the Health Care and Social Assistance sector.
 
 
 ~~~r
@@ -30,35 +31,71 @@ library(dplyr)
 
 
 ~~~r
-animals_1990_winter <- filter(
-  animals,
-  year == 1990,
-  month %in% 1:3)
+cbp_health_care <- filter(
+  cbp,
+  NAICS == '62----')
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
 ===
 
+That may not be what we wanted, because it's the aggregated data.
+
 
 ~~~r
-str(animals_1990_winter)
+str(cbp_health_care)
 ~~~
 {:.input}
 ~~~
-'data.frame':	491 obs. of  9 variables:
- $ id             : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
- $ month          : int  1 1 1 1 1 1 1 1 1 1 ...
- $ day            : int  6 6 6 6 6 6 6 6 6 6 ...
- $ year           : int  1990 1990 1990 1990 1990 1990 1990 1990 1990 1990 ...
- $ plot_id        : int  1 1 6 23 12 24 12 24 12 17 ...
- $ species_id     : Factor w/ 48 levels "AB","AH","AS",..: 12 17 23 33 33 33 38 39 38 13 ...
- $ sex            : Factor w/ 2 levels "F","M": 1 2 2 1 2 2 2 1 2 2 ...
- $ hindfoot_length: int  37 21 16 17 17 17 25 30 28 36 ...
- $ weight         : int  35 28 7 9 10 9 35 73 44 55 ...
+'data.frame':	3171 obs. of  26 variables:
+ $ FIPSTATE: chr  "01" "01" "01" "01" ...
+ $ FIPSCTY : chr  "001" "003" "005" "007" ...
+ $ NAICS   : chr  "62----" "62----" "62----" "62----" ...
+ $ EMPFLAG : chr  NA NA NA NA ...
+ $ EMP_NF  : chr  "G" "G" "G" "H" ...
+ $ EMP     : int  1618 7507 679 620 958 404 894 6088 673 449 ...
+ $ QP1_NF  : chr  "G" "G" "G" "H" ...
+ $ QP1     : int  12038 72416 5262 4698 7861 3016 8089 54848 5240 4176 ...
+ $ AP_NF   : chr  "G" "G" "G" "H" ...
+ $ AP      : int  50965 308177 22234 20161 33012 12961 32906 238227 22789 17087 ...
+ $ EST     : int  93 493 45 26 53 14 41 270 57 37 ...
+ $ N1_4    : int  34 191 21 8 20 5 11 104 23 14 ...
+ $ N5_9    : int  21 123 12 6 14 3 12 65 15 12 ...
+ $ N10_19  : int  22 112 7 3 9 3 12 47 11 5 ...
+ $ N20_49  : int  10 43 3 8 6 1 2 31 5 5 ...
+ $ N50_99  : int  3 15 0 0 1 0 1 15 3 0 ...
+ $ N100_249: int  2 7 2 0 3 2 3 6 0 1 ...
+ $ N250_499: int  1 0 0 1 0 0 0 1 0 0 ...
+ $ N500_999: int  0 2 0 0 0 0 0 0 0 0 ...
+ $ N1000   : int  0 0 0 0 0 0 0 1 0 0 ...
+ $ N1000_1 : int  0 0 0 0 0 0 0 1 0 0 ...
+ $ N1000_2 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_3 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_4 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ CENSTATE: chr  "63" "63" "63" "63" ...
+ $ CENCTY  : chr  "001" "003" "005" "007" ...
+ - attr(*, ".internal.selfref")=<externalptr> 
 ~~~
 {:.output}
 
-Note that a logical "and" is implied when conditions are separated by commas. (This is perhaps the main way in which `filter` differs from the base R `subset` function.) Therefore, the example above is equivalent to `filter(animals, year == 1990 & month %in% 1:3)`. A logical "or" must be specified explicitly with the `|` operator.
+===
+
+
+~~~r
+library(stringr)
+cbp_health_care <- filter(
+  cbp,
+  str_detect(NAICS, '^62'),
+  !is.na(as.integer(NAICS))
+  )
+~~~
+{:.text-document title="{{ site.handouts[0] }}"}
+
+Note that a logical "and" is implied when conditions are separated by commas.
+(This is perhaps the main way in which `filter` differs from the base R `subset`
+function.) Therefore, the example above is equivalent to `filter(cbp,
+str_detect(NAICS, '^62') & !is.na(as.integer(NAICS)))`. A logical "or" must be
+specified explicitly with the `|` operator.
 {:.notes}
 
 ===
@@ -67,13 +104,15 @@ To keep particular columns of a data frame (rather than choosing rows) , use the
 
 
 ~~~r
-colnames(animals)
+names(cbp)
 ~~~
 {:.input}
 ~~~
-[1] "id"              "month"           "day"             "year"           
-[5] "plot_id"         "species_id"      "sex"             "hindfoot_length"
-[9] "weight"         
+ [1] "FIPSTATE" "FIPSCTY"  "NAICS"    "EMPFLAG"  "EMP_NF"   "EMP"     
+ [7] "QP1_NF"   "QP1"      "AP_NF"    "AP"       "EST"      "N1_4"    
+[13] "N5_9"     "N10_19"   "N20_49"   "N50_99"   "N100_249" "N250_499"
+[19] "N500_999" "N1000"    "N1000_1"  "N1000_2"  "N1000_3"  "N1000_4" 
+[25] "CENSTATE" "CENCTY"  
 ~~~
 {:.output}
 
@@ -83,44 +122,64 @@ One way to "match" is by including complete names, each one you want to keep:
 
 
 ~~~r
-select(animals_1990_winter,
-  id, month, day, plot_id,
-  species_id, sex, hindfoot_length, weight)
+select(cbp_health_care,
+  FIPSTATE, FIPSCTY,
+  NAICS,
+  EMPFLAG, EMP_NF, EMP
+)
 ~~~
 {:.input}
 
 ===
 
-Alternatively, we can use a negative "match": keep columns that do not match the name preceded by minus sing.
+Alternatively, we can use a "select helper"" to match patterns.
 
 
 ~~~r
-animals_1990_winter <- select(
-  animals_1990_winter,
-  -year)
+cbp_health_care <- select(cbp_health_care,
+  starts_with('FIPS'),
+  NAICS,
+  starts_with('EMP')
+)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
-Use this option to remove a single column from a data frame.
-{:.notes}
-
 ===
 
 
 ~~~r
-str(animals_1990_winter)
+str(cbp_health_care)
 ~~~
 {:.input}
 ~~~
-'data.frame':	491 obs. of  8 variables:
- $ id             : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
- $ month          : int  1 1 1 1 1 1 1 1 1 1 ...
- $ day            : int  6 6 6 6 6 6 6 6 6 6 ...
- $ plot_id        : int  1 1 6 23 12 24 12 24 12 17 ...
- $ species_id     : Factor w/ 48 levels "AB","AH","AS",..: 12 17 23 33 33 33 38 39 38 13 ...
- $ sex            : Factor w/ 2 levels "F","M": 1 2 2 1 2 2 2 1 2 2 ...
- $ hindfoot_length: int  37 21 16 17 17 17 25 30 28 36 ...
- $ weight         : int  35 28 7 9 10 9 35 73 44 55 ...
+'data.frame':	63231 obs. of  26 variables:
+ $ FIPSTATE: chr  "01" "01" "01" "01" ...
+ $ FIPSCTY : chr  "001" "001" "001" "001" ...
+ $ NAICS   : chr  "621111" "621210" "621310" "621320" ...
+ $ EMPFLAG : chr  NA NA NA NA ...
+ $ EMP_NF  : chr  "G" "H" "G" "J" ...
+ $ EMP     : int  156 95 27 36 31 0 0 0 0 0 ...
+ $ QP1_NF  : chr  "G" "G" "G" "H" ...
+ $ QP1     : int  1603 933 232 297 339 0 0 0 0 0 ...
+ $ AP_NF   : chr  "G" "G" "G" "H" ...
+ $ AP      : int  7090 4557 970 1328 1411 0 0 0 0 0 ...
+ $ EST     : int  22 16 5 4 5 2 1 3 3 1 ...
+ $ N1_4    : int  10 6 3 0 2 1 1 1 0 1 ...
+ $ N5_9    : int  7 5 1 3 1 1 0 0 0 0 ...
+ $ N10_19  : int  4 5 1 1 2 0 0 2 2 0 ...
+ $ N20_49  : int  1 0 0 0 0 0 0 0 1 0 ...
+ $ N50_99  : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N100_249: int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N250_499: int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N500_999: int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000   : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_1 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_2 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_3 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_4 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ CENSTATE: chr  "63" "63" "63" "63" ...
+ $ CENCTY  : chr  "001" "001" "001" "001" ...
+ - attr(*, ".internal.selfref")=<externalptr> 
 ~~~
 {:.output}
 
@@ -134,6 +193,10 @@ To complete this section, we sort the 1990 winter animals data by descending ord
 sorted <- arrange(animals_1990_winter,
                   desc(species_id), weight)
 ~~~
+
+~~~
+Error in arrange(animals_1990_winter, desc(species_id), weight): object 'animals_1990_winter' not found
+~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
@@ -142,28 +205,16 @@ head(sorted)
 ~~~
 {:.input}
 ~~~
-     id month day plot_id species_id sex hindfoot_length weight
-1 16929     1   7       3         SH   M              31     61
-2 17172     2  25       3         SH   F              29     67
-3 17327     3  30       2         SH   M              30     69
-4 16886     1   6      24         SH   F              30     73
-5 17359     3  30       3         SH   F              31     77
-6 17170     2  25       3         SH   M              30     80
+Error in head(sorted): object 'sorted' not found
 ~~~
 {:.output}
 -->
 
 ===
 
-![]({{ site.baseurl }}/images/img_4185.jpg){:width="40%"}  
-*Credit: [The Portal Project](https://portalproject.wordpress.com)*
-{:.captioned}
-
-===
-
 ## Exercise 2
 
-Write code that returns the `id`, `sex` and `weight` of all surveyed individuals of *Reithrodontomys montanus* (RO).
+Write code that returns the annual payroll data for the top level Construction sector ("23----").
 
 [View solution](#solution-2)
 {:.notes}

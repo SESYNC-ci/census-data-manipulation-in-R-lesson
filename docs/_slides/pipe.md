@@ -3,11 +3,22 @@
 
 ## Chaining functions
 
-All those functions from the dplyr package take a data frame as their first argument, and they return a data frame. This consistent syntax is on purpose. It is designed for easily chaining data transformations together: processing data frames in easy-to-read steps.
+All those functions from the [dplyr](){:.rpkg} package take a data frame as
+their first argument, and they return a data frame. This consistent syntax is on
+purpose. It is designed for easily chaining data transformations together:
+processing data frames in easy-to-read steps.
 
 ===
 
-The "pipe" operator (`%>%`) from the [magrittr](){:.rpkg} package is loaded by dplyr. The pipe takes the expression on its left-hand side and hands it over as the first argument to the function on its right-hand side.
+The "pipe" operator (`%>%`) from the [magrittr](){:.rpkg} package is loaded by
+[dplyr](){:.rpkg} The pipe takes the expression on its left-hand side and hands
+it over as the first argument to the function on its right-hand side.
+
+
+~~~r
+library(magrittr)
+~~~
+{:.input}
 
 ===
 
@@ -39,15 +50,22 @@ c(1, 3, 5, NA) %>% sum(na.rm = TRUE)
 
 ===
 
-The pipe operator's main utility is to condense a chain of operations applied to the same piece of data, when you don't need to save the intermediate results. We can do both the filter and select operations from above with one assignment.
+The pipe operator's main utility is to condense a chain of operations applied to
+the same piece of data, when you don't need to save the intermediate results. We
+can do both the filter and select operations from above with one assignment.
 
 ===
 
 
 ~~~r
-animals_1990_winter <- animals %>%
-    filter(year == 1990, month %in% 1:3) %>%
-    select(-year)
+cbp_health_care <- cbp %>%
+  filter(
+    str_detect(NAICS, '^62'),
+    !is.na(as.integer(NAICS))) %>%
+  select(
+    starts_with('FIPS'),
+    NAICS,
+    starts_with('EMP'))
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
@@ -55,18 +73,17 @@ animals_1990_winter <- animals %>%
 
 
 ~~~r
-str(animals_1990_winter)
+str(cbp_health_care)
 ~~~
 {:.input}
 ~~~
-'data.frame':	491 obs. of  8 variables:
- $ id             : int  16879 16880 16881 16882 16883 16884 16885 16886 16887 16888 ...
- $ month          : int  1 1 1 1 1 1 1 1 1 1 ...
- $ day            : int  6 6 6 6 6 6 6 6 6 6 ...
- $ plot_id        : int  1 1 6 23 12 24 12 24 12 17 ...
- $ species_id     : Factor w/ 48 levels "AB","AH","AS",..: 12 17 23 33 33 33 38 39 38 13 ...
- $ sex            : Factor w/ 2 levels "F","M": 1 2 2 1 2 2 2 1 2 2 ...
- $ hindfoot_length: int  37 21 16 17 17 17 25 30 28 36 ...
- $ weight         : int  35 28 7 9 10 9 35 73 44 55 ...
+'data.frame':	63231 obs. of  6 variables:
+ $ FIPSTATE: chr  "01" "01" "01" "01" ...
+ $ FIPSCTY : chr  "001" "001" "001" "001" ...
+ $ NAICS   : chr  "621111" "621210" "621310" "621320" ...
+ $ EMPFLAG : chr  NA NA NA NA ...
+ $ EMP_NF  : chr  "G" "H" "G" "J" ...
+ $ EMP     : int  156 95 27 36 31 0 0 0 0 0 ...
+ - attr(*, ".internal.selfref")=<externalptr> 
 ~~~
 {:.output}
