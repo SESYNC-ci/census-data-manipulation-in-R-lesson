@@ -18,18 +18,7 @@ it over as the first argument to the function on its right-hand side.
 ~~~r
 library(magrittr)
 ~~~
-{:.input}
-~~~
-
-Attaching package: 'magrittr'
-~~~
-{:.input}
-~~~
-The following object is masked from 'package:tidyr':
-
-    extract
-~~~
-{:.output}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 ===
 

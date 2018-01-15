@@ -14,7 +14,7 @@ The "pipe" operator (`%>%`) from the [magrittr](){:.rpkg} package is loaded by
 [dplyr](){:.rpkg} The pipe takes the expression on its left-hand side and hands
 it over as the first argument to the function on its right-hand side.
 
-```{r magrittr, result = 'hide'}
+```{r magrittr, title = '{{ site.handouts[0] }}', message = FALSE}
 library(magrittr)
 ```
 
