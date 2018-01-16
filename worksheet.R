@@ -1,5 +1,6 @@
 ## Tidy data concept
 
+# evaluate the next command to create response
 response <- read.csv(text = "
 trial, drug_A, drug_B, placebo
 1,     0.22,   0.58,   0.31
@@ -13,6 +14,7 @@ library(...)
 tidy_response <- gather(...,
   ...)
 
+# evaluate the next command to create counts
 counts <- read.csv(text = "
 site, species, n
 1,    lynx,    2
@@ -37,24 +39,33 @@ wide_counts <- spread(counts,
 
 ## Read comma-separated-value (CSV) files
 
-animals <- ...
+library(...)
+cbp <- ...
 
-animals <- read.csv(
-  'data/animals.csv',
+cbp <- fread(
+  'data/cbp15co.csv',
   ...)
 
 ## Subsetting and sorting
 
 library(...)
 
-animals_1990_winter <- filter(
-  ...,
+cbp_health_care <- filter(
   ...,
   ...)
 
-animals_1990_winter <- select(
+library(...)
+cbp_health_care <- filter(
+  cbp,
   ...,
-  ...)
+  ...
+)
+
+cbp_health_care <- select(cbp_health_care,
+  ...,
+  NAICS,
+  ...
+)
 
 ## Exercise 2
 
@@ -62,31 +73,33 @@ animals_1990_winter <- select(
 
 ## Chainning with pipes
 
-animals_100_winter <- animals %>%
-    ... # filter to the first 3 months of 1990
-    ... # select all columns but year
+library(...)
+
+
+cbp_health_care <- cbp ...
+  ...(
+    str_detect(NAICS, '^62'),
+    !is.na(as.integer(NAICS))) ...
+  ...(
+    starts_with('FIPS'),
+    NAICS,
+    starts_with('EMP'))
 
 ## Grouping and aggregation
 
-counts_1990_winter <- animals_1990_winter %>%
-    group_by(...)
+state_cbp_health_care <- cbp_health_care %>%
+    ...(...)
 
-counts_1990_winter <- animals_1990_winter %>%
-  group_by(...)
+state_cbp_health_care <- cbp_health_care %>%
+  group_by(FIPSTATE) ...
+  ...  
 
-weight_1990_winter <- animals_1990_winter %>%
-  group_by(species_id) %>%
-  ...
+state_cbp_health_care <- cbp_health_care %>%
+  group_by(FIPSTATE) %>%
+  summarize(EMP = sum(EMP),
+            ...)
 
 ## Exercise 3
 
 ...
 
-## Transformation of variables
-
-prop_1990_winter <- counts_1990_winter %>%
-    mutate(...)
-
-## Exercise 4
-
-...
