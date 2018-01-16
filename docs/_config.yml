@@ -3,7 +3,7 @@
 title: Manipulating Tabular Data
 handouts:
   - worksheet.R
-  - data/cb15co.csv
+  - data/cbp15co.csv
   - data/README.md
 tag: v0.1
 lesson: 3
@@ -39,6 +39,7 @@ reveal: https://cdn.rawgit.com/hakimel/reveal.js/3.5.0
 
 # Jekyll
 
+github: [metadata]
 markdown: kramdown
 collections:
   - slides
