@@ -131,7 +131,7 @@ wide_counts
 
 Now that we have a wide form of counts, convert it to a `tidy_counts` data frame
 using `gather`. The only difference between `counts` and `tidy_counts` should be
-the additional row for zero lynx at site 2. Remember, a tidy dataset has a row
+the additional row for zero lynx at site 3. Remember, a tidy dataset has a row
 for every observation, even if the value is "implied".
 
 [View solution](#solution-1)
