@@ -16,21 +16,26 @@ the health care sector?
 The dplyr function `group_by` begins the process by indicating how the data frame should be split into subsets.
 
 
+
 ~~~r
 state_cbp_health_care <- cbp_health_care %>%
     group_by(FIPSTATE)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+
 ===
 
 At this point, nothing has really changed:
 
 
+
 ~~~r
-str(state_cbp_health_care)
+> str(state_cbp_health_care)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 Classes 'grouped_df', 'tbl_df', 'tbl' and 'data.frame':	63231 obs. of  7 variables:
  $ FIPSTATE: chr  "01" "01" "01" "01" ...
@@ -103,6 +108,7 @@ Classes 'grouped_df', 'tbl_df', 'tbl' and 'data.frame':	63231 obs. of  7 variabl
 ~~~
 {:.output}
 
+
 The `group_by` statement does not change any values in the data frame; it only
 adds attributes to the the original data frame. You can add multiple variables
 (separated by commas) in `group_by`; each distinct combination of values across
@@ -117,6 +123,7 @@ The operation to perform on each species is summing: we need to sum employment
 are in each group.
 
 
+
 ~~~r
 state_cbp_health_care <- cbp_health_care %>%
     group_by(FIPSTATE) %>%
@@ -124,19 +131,24 @@ state_cbp_health_care <- cbp_health_care %>%
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+
 ===
 
 
+
 ~~~r
-str(state_cbp_health_care)
+> str(state_cbp_health_care)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 Classes 'tbl_df', 'tbl' and 'data.frame':	51 obs. of  2 variables:
  $ FIPSTATE: chr  "01" "02" "04" "05" ...
  $ EMP     : int  162202 35063 325251 114101 1789324 240330 262599 60290 65472 950356 ...
 ~~~
 {:.output}
+
 
 ===
 
@@ -147,6 +159,7 @@ The "combine" part of "split-apply-combine" occurs automatically, when the attri
 The function `n()` takes no arguments and returns the number of records in a group. Any function that collapses a vector input to a single output is a suitable function to use within `summarize`.
 
 
+
 ~~~r
 state_cbp_health_care <- cbp_health_care %>%
     group_by(FIPSTATE) %>%
@@ -155,15 +168,19 @@ state_cbp_health_care <- cbp_health_care %>%
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+
 ===
 
 But `group_by` can't read your mind, so be careful to type what you mean! 
 
 
+
 ~~~r
-head(state_cbp_health_care)
+> head(state_cbp_health_care)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 # A tibble: 6 x 3
   FIPSTATE     EMP counties
@@ -177,14 +194,3 @@ head(state_cbp_health_care)
 ~~~
 {:.output}
 
-===
-
-## Exercise 3
-
-Write code that fixes `state_cbp_health_care`, which should show the number
-of counties and the total employment. Group the data using **both** `FIPSTATE`
-and `FIPSCTY` and use the fact that a call to `summarize` only combines across
-the lowest level of grouping.
-
-[View solution](#solution-3)
-{:.notes}

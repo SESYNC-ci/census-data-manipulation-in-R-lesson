@@ -8,10 +8,13 @@
 ## Solution 1
 
 
+
 ~~~r
-gather(wide_counts, key = "species", value = "n", -site)
+> gather(wide_counts, key = "species", value = "n", -site)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
   site   species   n
 1    1  hare     341
@@ -23,6 +26,7 @@ gather(wide_counts, key = "species", value = "n", -site)
 ~~~
 {:.output}
 
+
 [Return](#exercise-1)
 {:.notes}
 
@@ -31,11 +35,14 @@ gather(wide_counts, key = "species", value = "n", -site)
 ## Solution 2
 
 
+
 ~~~r
-cbp_construction <- filter(cbp, NAICS == '23----')
-select(cbp_construction, starts_with('FIPS'), starts_with('AP'))
+> cbp_construction <- filter(cbp, NAICS == '23----')
+> select(cbp_construction, starts_with('FIPS'), starts_with('AP'))
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
      FIPSTATE FIPSCTY AP_NF       AP
 1          01     001     G    13801
@@ -3219,6 +3226,7 @@ select(cbp_construction, starts_with('FIPS'), starts_with('AP'))
 ~~~
 {:.output}
 
+
 [Return](#exercise-2)
 {:.notes}
 
@@ -3227,13 +3235,15 @@ select(cbp_construction, starts_with('FIPS'), starts_with('AP'))
 ## Solution 3
 
 
+
 ~~~r
-state_cbp_health_care <- cbp_health_care %>%
-  group_by(FIPSTATE, FIPSCTY) %>%
-  summarize(EMP = sum(EMP)) %>%
-  summarize(EMP = sum(EMP), counties = n())
+> state_cbp_health_care <- cbp_health_care %>%
++   group_by(FIPSTATE, FIPSCTY) %>%
++   summarize(EMP = sum(EMP)) %>%
++   summarize(EMP = sum(EMP), counties = n())
 ~~~
-{:.input}
+{:.input title="Console"}
+
 
 [Return](#exercise-3)
 {:.notes}
@@ -3244,16 +3254,20 @@ state_cbp_health_care <- cbp_health_care %>%
 ## Solution 4
 
 
+
 ~~~r
-group_by(animals, species_id, month) %>%
-  summarize(count = n()) %>%
-  spread(key = month, value = count, fill = 0)
+> group_by(animals, species_id, month) %>%
++   summarize(count = n()) %>%
++   spread(key = month, value = count, fill = 0)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 Error in group_by(animals, species_id, month): object 'animals' not found
 ~~~
 {:.output}
+
 
 [Return](#exercise-3)
 {:.notes}

@@ -15,38 +15,48 @@ The "pipe" operator (`%>%`) from the [magrittr](){:.rpkg} package is loaded by
 it over as the first argument to the function on its right-hand side.
 
 
+
 ~~~r
 library(magrittr)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
+
 
 ===
 
 Equivalent to `sum(c(1,3,5))`, for example, we have:
 
 
+
 ~~~r
-c(1, 3, 5) %>% sum()
+> c(1, 3, 5) %>% sum()
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 [1] 9
 ~~~
 {:.output}
+
 
 ===
 
 Additional arguments are accepted, a pipe only handles the first.
 
 
+
 ~~~r
-c(1, 3, 5, NA) %>% sum(na.rm = TRUE)
+> c(1, 3, 5, NA) %>% sum(na.rm = TRUE)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 [1] 9
 ~~~
 {:.output}
+
 
 ===
 
@@ -55,6 +65,7 @@ the same piece of data, when you don't need to save the intermediate results. We
 can do both the filter and select operations from above with one assignment.
 
 ===
+
 
 
 ~~~r
@@ -69,13 +80,17 @@ cbp_health_care <- cbp %>%
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+
 ===
 
 
+
 ~~~r
-str(cbp_health_care)
+> str(cbp_health_care)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 'data.frame':	63231 obs. of  6 variables:
  $ FIPSTATE: chr  "01" "01" "01" "01" ...
@@ -87,3 +102,4 @@ str(cbp_health_care)
  - attr(*, ".internal.selfref")=<externalptr> 
 ~~~
 {:.output}
+

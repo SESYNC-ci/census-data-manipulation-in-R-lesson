@@ -35,9 +35,3 @@ Question
 
 Answer
 : {:.fragment} The same number you started with.
-
-===
-
-## Exercise 4
-
-A "pivot table" is a transformation of tidy data into a wide summary table. First, data are summarized by *two* grouping factors, then one of these is "pivoted" into columns. Starting from the `animals` data frame, chain a `group_by` and `summarize` transformation into a [tidyr](){:.rlib} `spread` function to get the number of individuals counted in each month (as three columns) by species (as rows).

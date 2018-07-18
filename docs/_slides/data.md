@@ -3,24 +3,28 @@
 #
 ---
 
-## Sample data
+## Sample Data
 
-To learn about data transformation with dplyr, we need more data. The [County Business Patterns (CBP) dataset] provides subnational economic data by industry. The annual series includes the number of establishments, employment, and payroll.
-
-[County Business Patterns (CBP) dataset]: https://www.census.gov/programs-surveys/cbp/data/datasets.html
-
-===
+To learn about data transformation with dplyr, we need more data. The Census
+Bureau collects subnational economic data for the U.S., releasing annual [County
+Business Patterns (CBP)] datasets including the number of establishments,
+employment, and payroll by industry. They also conduct the [American Community
+Survey (ACS)] and publish, among other demographic and economic variables, estimates of
+median income for individuals working in different industries.
+{:.notes}
 
 ![]({{ site.baseurl }}/images/data.jpg){: width="60%"}  
 *Credit: [US Census Bureau](https://www.census.gov/programs-surveys/cbp.html)*
 {:.captioned}
 
+- [County Business Patterns (CBP)]
+- [American Community Survey (ACS)]
+
+[County Business Patterns (CBP)]: https://www.census.gov/programs-surveys/cbp/data/datasets.html
+[American Community Survey (ACS)]: https://www.census.gov/programs-surveys/acs/
+
 ===
 
-The [CBP dataset documentation] explains the variables. The key variables we use in this lesson are ## FIXME
-{:.notes}
-
-[CBP dataset documentation]: https://www2.census.gov/programs-surveys/rhfs/cbp/technical%20documentation/2015_record_layouts/county_layout_2015.txt
 
 
 ~~~r
@@ -29,10 +33,14 @@ cbp <- fread('data/cbp15co.csv')
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
+
+
 ~~~r
-str(cbp)
+> str(cbp)
 ~~~
-{:.input}
+{:.input title="Console"}
+
+
 ~~~
 Classes 'data.table' and 'data.frame':	2126601 obs. of  26 variables:
  $ FIPSTATE: chr  "01" "01" "01" "01" ...
@@ -65,17 +73,27 @@ Classes 'data.table' and 'data.frame':	2126601 obs. of  26 variables:
 ~~~
 {:.output}
 
+
+See the [CBP dataset documentation] for an explanation of the variables we don't
+discuss in this lesson.
+{:.notes}
+
+[CBP dataset documentation]: https://www2.census.gov/programs-surveys/rhfs/cbp/technical%20documentation/2015_record_layouts/county_layout_2015.txt
+
 ===
 
-Modify the function to specify what string in the CSV file represents NAs, a.k.a. data that is not-available or missing.
+Modify the import to specify what string in the CSV file represents NAs,
+a.k.a. data that is not-available or missing.
+
 
 
 ~~~r
 cbp <- fread(
   'data/cbp15co.csv',
-  na.strings = '')
+  na.strings = c())
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
+
 
 ===
 
@@ -83,4 +101,43 @@ Question
 : What changed?
 
 Answer
-: {:.fragment} Using `str()` shows that the character string "" in the CSV file is read into R as missing data (an `NA`) rather than the value `''`.
+: {:.fragment} Using `str()` shows that the character string "" in the CSV file
+is no longer read into R as missing data (an `NA`) but as the value `''`.
+
+===
+
+
+
+~~~r
+acs <- fread('data/ACS/sector_ACS_15_5YR_S2413.csv')
+~~~
+{:.text-document title="{{ site.handouts[0] }}"}
+
+
+
+~~~r
+> str(acs)
+~~~
+{:.input title="Console"}
+
+
+~~~
+Classes 'data.table' and 'data.frame':	59698 obs. of  4 variables:
+ $ FIPS         : chr  "01001" "01003" "01005" "01007" ...
+ $ County       : chr  "Autauga County, Alabama" "Baldwin County, Alabama" "Barbour County, Alabama" "Bibb County, Alabama" ...
+ $ Sector       : chr  "agriculture forestry fishing and hunting" "agriculture forestry fishing and hunting" "agriculture forestry fishing and hunting" "agriculture forestry fishing and hunting" ...
+ $ median_income: int  27235 40017 32260 22240 21260 30469 33300 39784 40417 20370 ...
+ - attr(*, ".internal.selfref")=<externalptr> 
+~~~
+{:.output}
+
+
+===
+
+The two datasets both contain economic variables for each U.S. county and
+specified by different categories of industry. The data could potentially be
+manipulated into a single table reflecting the follow statistical model.
+
+$$
+median_income \sim industry + establishment_size
+$$

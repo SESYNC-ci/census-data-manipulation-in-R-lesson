@@ -1,8 +1,7 @@
 ---
-# group by NAICS, sum across county
 ---
 
-## Split-apply-combine
+## Split-Apply-Combine
 
 A very common data manipulation procedure is doing some "group-wise" operations
 on a dataset and combing the results for each group into a single table. For
@@ -75,15 +74,3 @@ But `group_by` can't read your mind, so be careful to type what you mean!
 ```{r}
 head(state_cbp_health_care)
 ```
-
-===
-
-## Exercise 3
-
-Write code that fixes `state_cbp_health_care`, which should show the number
-of counties and the total employment. Group the data using **both** `FIPSTATE`
-and `FIPSCTY` and use the fact that a call to `summarize` only combines across
-the lowest level of grouping.
-
-[View solution](#solution-3)
-{:.notes}
