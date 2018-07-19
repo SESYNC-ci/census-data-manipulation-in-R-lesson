@@ -13,14 +13,14 @@ across multiple NAICS codes representing a single industry sector.
 
 
 ~~~r
-many_to_one <- fread('data/ACS/sector_naics.csv')
+sector <- fread('data/ACS/sector_naics.csv')
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
 
 ~~~r
-> View(many_to_one)
+> View(sector)
 ~~~
 {:.input title="Console"}
 
@@ -30,16 +30,18 @@ research is dealing with their different sampling frames. A very common issue is
 that data are collected at different "scales", with one dataset being at higher
 spatial or temporal resolution than another. The differences between the CBP and
 ACS categories of industry present a similar problem, and require the same
-solution of re-aggregating data at the "lower" resolution.
+solution of re-aggregating data at the "lower resolution".
 {:.notes}
 
 ===
 
+### Many-to-One
+
 
 
 ~~~r
-cbp_sector <- cbp %>%
-  inner_join(many_to_one)
+cbp <- cbp %>%
+  inner_join(sector)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
 
@@ -53,16 +55,26 @@ Joining, by = "NAICS"
 
 
 ~~~r
-> View(cbp_sector)
+> View(cbp)
 ~~~
 {:.input title="Console"}
 
 
 ===
 
+![]({{ site.baseurl }}/images/many-to-one.svg){:width="80%"}
+
+The NAICS field in the `cbp` table can have the same value multiple times, it is
+not a primary key in this table. In the `sector` table, the NAICS field is the
+primary key uniquely identifying each record. The type of relationship between
+these tables is therefore "many-to-one".
+{:.notes}
+
+===
+
 Question
 : Note that we lost a couple thousand rows through this join. How could
-`cbp_sector` have fewer rows than `cbp` after a join on NAICS codes?
+`cbp` have fewer rows after a join on NAICS codes?
 
 Answer
 : {:.fragment} The CBP data contains an NAICS code not mapped to a sector---the
@@ -86,7 +98,7 @@ frame should be split into subsets.
 
 
 ~~~r
-cbp_sector_grouped <- cbp_sector %>%
+cbp_grouped <- cbp %>%
   group_by(FIPS, Sector)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
@@ -99,7 +111,7 @@ At this point, nothing has really changed:
 
 
 ~~~r
-> str(cbp_sector_grouped)
+> str(cbp_grouped)
 ~~~
 {:.input title="Console"}
 
@@ -255,7 +267,7 @@ are automically combined into a data frame.
 
 
 ~~~r
-cbp_sector <- cbp_sector %>%
+cbp <- cbp %>%
   group_by(FIPS, Sector) %>%
   select(starts_with('N'), -NAICS) %>%
   summarize_all(sum)
@@ -277,13 +289,18 @@ RStudio *Environment* pane.
 
 ===
 
-There is now a one-to-one relationship between `cbp_sector` and `acs`, based on
+![]({{ site.baseurl }}/images/one-to-one.svg){:width="80%"}
+
+There is now a one-to-one relationship between `cbp` and `acs`, based on
 the combination of FIPS and Sector as the primary key for both tables.
+{:.notes}
+
+===
 
 
 
 ~~~r
-acs_cbp <- cbp_sector %>%
+acs_cbp <- cbp %>%
   inner_join(acs)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}

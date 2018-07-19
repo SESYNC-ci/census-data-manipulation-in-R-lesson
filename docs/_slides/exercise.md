@@ -60,10 +60,10 @@ NAICS code (as columns).
 
 
 ~~~r
-> gather(tidy_survey, key = "attr",
-+   value = "val", -participant)
+gather(tidy_survey, key = "attr",
+  value = "val", -participant)
 ~~~
-{:.input title="Console"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 
 ~~~
@@ -88,15 +88,15 @@ NAICS code (as columns).
 
 
 ~~~r
-> cbp_23 <- fread('data/cbp15co.csv', na.strings = '') %>%
-+   filter(NAICS == '23----') %>%
-+   select(starts_with('FIPS'), starts_with('AP'))
+cbp_23 <- fread('data/cbp15co.csv', na.strings = '') %>%
+  filter(NAICS == '23----') %>%
+  select(starts_with('FIPS'), starts_with('AP'))
 ~~~
-{:.input title="Console"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 
 ~~~
-Read 75.2% of 2126601 rowsRead 2126601 rows and 26 (of 26) columns from 0.167 GB file in 00:00:03
+Read 26.8% of 2126601 rowsRead 70.1% of 2126601 rowsRead 2126601 rows and 26 (of 26) columns from 0.167 GB file in 00:00:04
 ~~~
 {:.output}
 
@@ -111,17 +111,17 @@ NAICS code (as columns).
 
 
 ~~~r
-> cbp_21 <- fread('data/cbp15co.csv', na.strings = '') %>%
-+   filter(NAICS == '21----') %>%
-+   group_by(FIPSTATE, FIPSCTY) %>%
-+   summarize(EMP = sum(EMP)) %>%
-+   summarize(EMP = sum(EMP), counties = n())
+cbp_21 <- fread('data/cbp15co.csv', na.strings = '') %>%
+  filter(NAICS == '21----') %>%
+  group_by(FIPSTATE, FIPSCTY) %>%
+  summarize(EMP = sum(EMP)) %>%
+  summarize(EMP = sum(EMP), counties = n())
 ~~~
-{:.input title="Console"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 
 ~~~
-Read 68.7% of 2126601 rowsRead 2126601 rows and 26 (of 26) columns from 0.167 GB file in 00:00:03
+Read 58.8% of 2126601 rowsRead 2126601 rows and 26 (of 26) columns from 0.167 GB file in 00:00:03
 ~~~
 {:.output}
 
@@ -136,17 +136,17 @@ NAICS code (as columns).
 
 
 ~~~r
-> pivot <- fread('data/cbp15co.csv', na.strings = '') %>%
-+   filter(str_detect(NAICS, '[0-9]{2}----')) %>%
-+   group_by(FIPSTATE, NAICS) %>%
-+   summarize(EMP = sum(EMP)) %>%
-+   spread(key = NAICS, value = EMP)
+pivot <- fread('data/cbp15co.csv', na.strings = '') %>%
+  filter(str_detect(NAICS, '[0-9]{2}----')) %>%
+  group_by(FIPSTATE, NAICS) %>%
+  summarize(EMP = sum(EMP)) %>%
+  spread(key = NAICS, value = EMP)
 ~~~
-{:.input title="Console"}
+{:.text-document title="{{ site.handouts[0] }}"}
 
 
 ~~~
-Read 72.4% of 2126601 rowsRead 2126601 rows and 26 (of 26) columns from 0.167 GB file in 00:00:03
+Read 55.0% of 2126601 rowsRead 98.3% of 2126601 rowsRead 2126601 rows and 26 (of 26) columns from 0.167 GB file in 00:00:04
 ~~~
 {:.output}
 

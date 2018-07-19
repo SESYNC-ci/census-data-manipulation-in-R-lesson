@@ -41,17 +41,11 @@ $$
 
 In a tidy format, each row is a complete observation: it includes the response
 value and all the predictor values. In this data, some of those predictor values
-are column headers, so we've got to tidy up!
+are column headers, so the table needs to be reshaped. The [tidyr](){:.rlib}
+package provides functions to help re-organize tables.
 {:.notes}
 
 ===
-
-Datasets originally split across multiple tables are commonly used for synthesis
-research in two ways (often in combination):
-
-- two tables are "un-tidied" by joins or merges
-- statistical models conform to the data model by incorporating a hierarchy or
-"random effects"
 
 The third principle of tidy data, one table per category of observed entities,
 becomes especially important in synthesis research. Following this principle
@@ -59,13 +53,21 @@ requires holding tidy data in multiple tables, with associations between them
 formalized in metadata, as in a relational database.
 {:.notes}
 
+Datasets split across multiple tables are unavoidable in synthesis
+research, and commonly used in the following two ways (often in combination):
+
+- two tables are "un-tidied" by joins, or merging them into one table
+- statistical models conform to the data model through a hierarchical structure
+or employing "random effects"
+
 ===
 
-The [dplyr](){:.rlib} package includes functions to perform several variations
-on the table merges needed for the first approach, but there are only two basic
-types of merge to recognize:
+The [dplyr](){:.rlib} package includes several functions that all perform
+variations on table joins needed to "un-tidy" your tables, but there are only
+two basic types of table relationships to recognize:
 
-- **One-to-one** joins combine tables on the same unique identifier (or "primary
-key") in both tables.
-- **Many-to-one** joins match non-unique "foreign keys" in the first table to
-the primary key of the second.
+- **One-to-one** relationships allow tables to be combined based on the same
+unique identifier (or "primary key") in both tables.
+- **Many-to-one** relationships require non-unique "foreign keys" in the first
+table to match the primary key of the second.
+

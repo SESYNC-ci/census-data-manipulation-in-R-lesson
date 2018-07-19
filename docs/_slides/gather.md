@@ -62,7 +62,7 @@ variables without subsetting them from a data frame (i.e. `block` instead of
 
 ## Spread
 
-Data can also fail to be tidy when the tables are too long. The
+Data can also fail to be tidy when a table is too long. The
 Entity-Attribute-Value (EAV) structure common in large databases distributes
 multible attributes of a single entity/observation into separate rows.
 
@@ -76,7 +76,8 @@ sepcies across multiple sites is considered a complete observation.
 
 ===
 
-Consider survey data on participant's age and income *stored* in a long table.
+Consider survey data on participant's age and income *stored* in a EAV
+structure.
 
 
 
@@ -136,7 +137,8 @@ to create new column names.
 
 One difficulty with EAV tables is the nature of missing data; an entire row
 rather than a single cell is missing. Think about what "missing data" could mean
-here---perhaps you can supply a value.
+here---perhaps you can supply a value instead of the `NA` in the previous
+result.
 
 
 

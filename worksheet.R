@@ -1,105 +1,94 @@
-## Tidy data concept
+## Tidy Concept
 
-# evaluate the next command to create response
-response <- read.csv(text = "
-trial, drug_A, drug_B, placebo
-1,     0.22,   0.58,   0.31
-2,     0.12,   0.98,   0.47
-3,     0.42,   0.19,   0.40
+trial <- read.delim(sep = ',', header = TRUE, text = "
+block, drug, control, placebo
+    1, 0.22,    0.58,    0.31
+    2, 0.12,    0.98,    0.47
+    3, 0.42,    0.19,    0.40
 ")
 
-## Reshaping multiple columns in category/value pairs
+## Gather 
 
-library(...)
-tidy_response <- gather(...,
+library(tidyr)
+tidy_trial <- ...(trial,
+  key = ...,
+  value = ...,
   ...)
 
-# evaluate the next command to create counts
-counts <- read.csv(text = "
-site, species, n
-1,    lynx,    2
-1,    hare,    341
-2,    lynx,    7
-2,    hare,    42
-3,    hare,    289
-")
+## Spread 
 
-wide_counts <- ...(counts,
-			...,
-			...)
+tidy_survey <- ...(survey,
+  key = ...,
+  value = ...)
 
-wide_counts <- spread(counts,
-  key = species,
-  value = n,
+tidy_survey <- spread(survey,
+  key = attr,
+  value = val,
   ...)
 
-## Exercise 1
+## Sample Data 
 
-...
-
-## Read comma-separated-value (CSV) files
-
-library(...)
-cbp <- ...
+library(data.table)
+cbp <- fread('data/cbp15co.csv')
 
 cbp <- fread(
   'data/cbp15co.csv',
-  ...)
+  na.strings = c())
 
-## Subsetting and sorting
+acs <- fread('data/ACS/sector_ACS_15_5YR_S2413.csv')
 
-library(...)
-
-cbp_health_care <- filter(
-  ...,
-  ...)
+## dplyr Functions 
 
 library(...)
-cbp_health_care <- filter(
-  cbp,
+cbp2 <- filter(...,
   ...,
-  ...
-)
+  !grepl('------', NAICS))
 
-cbp_health_care <- select(cbp_health_care,
-  ...,
-  NAICS,
-  ...
-)
+library(...)
+cbp2 <- filter(cbp,
+  ...)
 
-## Exercise 2
+cbp3 <- mutate(...,
+  ...)
+
+cbp3 <- mutate(cbp2,
+  FIPS = str_c(FIPSTATE, FIPSCTY),
+  ...)
 
 ...
+  filter(
+    str_detect(NAICS, '[0-9]{2}----')
+  ) ...
+  mutate(
+    FIPS = str_c(FIPSTATE, FIPSCTY),
+    NAICS = str_remove(NAICS, '-+')
+  )
 
-## Chainning with pipes
-
-library(...)
-
-
-cbp_health_care <- cbp ...
+...
   ...(
-    str_detect(NAICS, '^62'),
-    !is.na(as.integer(NAICS))) ...
-  ...(
-    starts_with('FIPS'),
+    FIPS,
     NAICS,
-    starts_with('EMP'))
+    starts_with('N')
+  )
 
-## Grouping and aggregation
+## Join 
 
-state_cbp_health_care <- cbp_health_care %>%
-    ...(...)
+sector <- fread('data/ACS/sector_naics.csv')
 
-state_cbp_health_care <- cbp_health_care %>%
-  group_by(FIPSTATE) ...
-  ...  
+cbp <- cbp %>%
+  ...
 
-state_cbp_health_care <- cbp_health_care %>%
-  group_by(FIPSTATE) %>%
-  summarize(EMP = sum(EMP),
-            ...)
+## Group By 
 
-## Exercise 3
+cbp_grouped <- cbp %>%
+  ...
 
-...
+## Summarize 
 
+cbp <- cbp %>%
+  group_by(FIPS, Sector) %>%
+  ...
+  ...
+
+acs_cbp <- ... %>%
+  ...

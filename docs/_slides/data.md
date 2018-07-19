@@ -5,6 +5,12 @@
 
 ## Sample Data
 
+![]({{ site.baseurl }}/images/data.jpg){: width="50%"}  
+*Credit: [US Census Bureau](https://www.census.gov/programs-surveys/cbp.html)*
+{:.captioned}
+
+===
+
 To learn about data transformation with dplyr, we need more data. The Census
 Bureau collects subnational economic data for the U.S., releasing annual [County
 Business Patterns (CBP)] datasets including the number of establishments,
@@ -15,10 +21,6 @@ median income for individuals working in different industries.
 
 - [County Business Patterns (CBP)]
 - [American Community Survey (ACS)]
-
-![]({{ site.baseurl }}/images/data.jpg){: width="50%"}  
-*Credit: [US Census Bureau](https://www.census.gov/programs-surveys/cbp.html)*
-{:.captioned}
 
 [County Business Patterns (CBP)]: https://www.census.gov/programs-surveys/cbp/data/datasets.html
 [American Community Survey (ACS)]: https://www.census.gov/programs-surveys/acs/
