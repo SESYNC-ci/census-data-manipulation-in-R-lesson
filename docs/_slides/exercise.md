@@ -7,10 +7,9 @@
 
 ### Exercise 1
 
-Now that we have a wide form of counts, convert it to a `tidy_counts` data frame
-using `gather`. The only difference between `counts` and `tidy_counts` should be
-the additional row for zero lynx at site 3. Remember, a tidy dataset has a row
-for every observation, even if the value is "implied".
+Now that we have a tidy form of `survey`, convert it to a `long_survey` data
+frame using `gather`. The only difference between `survey` and `long_survey`
+should be an additional row for zero income.
 
 [View solution](#solution-1)
 {:.notes}
@@ -19,8 +18,8 @@ for every observation, even if the value is "implied".
 
 ### Exercise 2
 
-Write code that returns the annual payroll data for the top level Construction
-sector ("23----").
+Use `filter` and `select` to return just the annual payroll data for the top
+level construction sector ("23----").
 
 [View solution](#solution-2)
 {:.notes}
@@ -29,23 +28,28 @@ sector ("23----").
 
 ### Exercise 3
 
-Write code that fixes `state_cbp_health_care`, which should show the number
-of counties and the total employment. Group the data using **both** `FIPSTATE`
-and `FIPSCTY` and use the fact that a call to `summarize` only combines across
-the lowest level of grouping.
+Write code to create a data frame giving, for each state, the number of counties
+in the CBP survey with establishements in mining or oil and gas extraction
+('21----') along with their total employment ("EMP"). Group the data using
+*both* `FIPSTATE` and `FIPSCTY` and use the fact that one call to `summarize`
+only combines across the lowest level of grouping. The [dplyr](){:.rlib}
+function `n` counts rows in a group.
 
 [View solution](#solution-3)
 {:.notes}
 
 ===
-<!--
 
 ### Exercise 4
 
-A "pivot table" is a transformation of tidy data into a wide summary table. First, data are summarized by *two* grouping factors, then one of these is "pivoted" into columns. Starting from the `animals` data frame, chain a `group_by` and `summarize` transformation into a [tidyr](){:.rlib} `spread` function to get the number of individuals counted in each month (as three columns) by species (as rows).
+A "pivot table" is a transformation of tidy data into a wide summary table.
+First, data are summarized by *two* grouping factors, then one of these is
+"pivoted" into columns. Starting from a filtered CBP data file, chain a
+split-apply-combine procedure into the [tidyr](){:.rlib} function `spread` to
+get the total number of employees ("EMP") in each state (as rows) by 2-digit
+NAICS code (as columns).
 
 ===
--->
 
 ## Solutions
 
@@ -56,13 +60,20 @@ A "pivot table" is a transformation of tidy data into a wide summary table. Firs
 
 
 ~~~r
-> gather(wide_counts, key = "species", value = "n", -site)
+> gather(tidy_survey, key = "attr",
++   value = "val", -participant)
 ~~~
 {:.input title="Console"}
 
 
 ~~~
-Error in gather(wide_counts, key = "species", value = "n", -site): object 'wide_counts' not found
+  participant    attr val
+1           1     age  24
+2           2     age  57
+3           3     age  13
+4           1  income  30
+5           2  income  60
+6           3  income   0
 ~~~
 {:.output}
 
@@ -77,15 +88,15 @@ Error in gather(wide_counts, key = "species", value = "n", -site): object 'wide_
 
 
 ~~~r
-> cbp_construction <- filter(cbp, NAICS == '23----')
-> select(cbp_construction, starts_with('FIPS'), starts_with('AP'))
+> cbp_23 <- fread('data/cbp15co.csv', na.strings = '') %>%
++   filter(NAICS == '23----') %>%
++   select(starts_with('FIPS'), starts_with('AP'))
 ~~~
 {:.input title="Console"}
 
 
 ~~~
-[1] FIPS
-<0 rows> (or 0-length row.names)
+Read 75.2% of 2126601 rowsRead 2126601 rows and 26 (of 26) columns from 0.167 GB file in 00:00:03
 ~~~
 {:.output}
 
@@ -100,7 +111,8 @@ Error in gather(wide_counts, key = "species", value = "n", -site): object 'wide_
 
 
 ~~~r
-> state_cbp_health_care <- cbp_health_care %>%
+> cbp_21 <- fread('data/cbp15co.csv', na.strings = '') %>%
++   filter(NAICS == '21----') %>%
 +   group_by(FIPSTATE, FIPSCTY) %>%
 +   summarize(EMP = sum(EMP)) %>%
 +   summarize(EMP = sum(EMP), counties = n())
@@ -109,7 +121,7 @@ Error in gather(wide_counts, key = "species", value = "n", -site): object 'wide_
 
 
 ~~~
-Error in eval(lhs, parent, parent): object 'cbp_health_care' not found
+Read 68.7% of 2126601 rowsRead 2126601 rows and 26 (of 26) columns from 0.167 GB file in 00:00:03
 ~~~
 {:.output}
 
@@ -117,7 +129,6 @@ Error in eval(lhs, parent, parent): object 'cbp_health_care' not found
 [Return](#exercise-3)
 {:.notes}
 
-<!--
 ===
 
 ### Solution 4
@@ -125,19 +136,20 @@ Error in eval(lhs, parent, parent): object 'cbp_health_care' not found
 
 
 ~~~r
-> group_by(animals, species_id, month) %>%
-+   summarize(count = n()) %>%
-+   spread(key = month, value = count, fill = 0)
+> pivot <- fread('data/cbp15co.csv', na.strings = '') %>%
++   filter(str_detect(NAICS, '[0-9]{2}----')) %>%
++   group_by(FIPSTATE, NAICS) %>%
++   summarize(EMP = sum(EMP)) %>%
++   spread(key = NAICS, value = EMP)
 ~~~
 {:.input title="Console"}
 
 
 ~~~
-Error in group_by(animals, species_id, month): object 'animals' not found
+Read 72.4% of 2126601 rowsRead 2126601 rows and 26 (of 26) columns from 0.167 GB file in 00:00:03
 ~~~
 {:.output}
 
 
 [Return](#exercise-4)
 {:.notes}
--->

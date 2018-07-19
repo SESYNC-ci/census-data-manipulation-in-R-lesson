@@ -13,12 +13,12 @@ Survey (ACS)] and publish, among other demographic and economic variables, estim
 median income for individuals working in different industries.
 {:.notes}
 
-![]({{ site.baseurl }}/images/data.jpg){: width="60%"}  
-*Credit: [US Census Bureau](https://www.census.gov/programs-surveys/cbp.html)*
-{:.captioned}
-
 - [County Business Patterns (CBP)]
 - [American Community Survey (ACS)]
+
+![]({{ site.baseurl }}/images/data.jpg){: width="50%"}  
+*Credit: [US Census Bureau](https://www.census.gov/programs-surveys/cbp.html)*
+{:.captioned}
 
 [County Business Patterns (CBP)]: https://www.census.gov/programs-surveys/cbp/data/datasets.html
 [American Community Survey (ACS)]: https://www.census.gov/programs-surveys/acs/
@@ -56,8 +56,8 @@ Question
 : What changed?
 
 Answer
-: {:.fragment} Using `str()` shows that the character string "" in the CSV file
-is no longer read into R as missing data (an `NA`) but as the value `''`.
+: {:.fragment} Using `str()` shows that the character string `""` in the CSV file
+is no longer read into R as missing data (an `NA`) but as an empty string.
 
 ===
 
@@ -75,5 +75,5 @@ specified by different categories of industry. The data could potentially be
 manipulated into a single table reflecting the follow statistical model.
 
 $$
-median_income \sim industry + establishment_size
+median\_income \sim industry + establishment\_size
 $$

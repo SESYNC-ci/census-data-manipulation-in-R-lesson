@@ -1,21 +1,22 @@
 ---
 ---
 
-## Review
+## Additional Resources
 
-- Convert between wide and long tables
-- Transform columns
-- Split-apply-combine routine
+The following cheat sheets and tutorials repeat much of this lesson, but also
+provide information on additional functions for "data wrangling".
 
-===
+- [Data Transformation Cheat Sheet]
+- [Data manipulation with tidyr]
+- [Regular Expressions Cheat Sheet]
 
-## RStudio Cheatsheets
-
-[Data Wrangling with dplyr and tidyr](http://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf)
-
-One of several cheat sheets available on the RStudio website, it provides a
-brief, visual summary of all the key functions discussed in this lesson. It also
-lists some of the auxiliary functions that can be used within each type of
-expression, e.g. aggregation functions for summarize, "moving window" functions
-for mutate, etc.
+The first is one of several cheat sheets created by RStudio, and
+provides a handy, visual summary of all the key functions discussed in this
+lesson. It also lists some of the auxiliary functions that can be used within
+each type of expression, e.g. aggregation functions for summarize, "moving
+window" functions for mutate, etc.
 {:.notes}
+
+[Data Transformation Cheat Sheet]: https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf
+[Regular Expressions Cheat Sheet]: https://www.rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf
+[Data manipulation with tidyr]: https://datascienceplus.com/data-manipulation-with-tidyr/

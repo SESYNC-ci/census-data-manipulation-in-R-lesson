@@ -36,6 +36,8 @@ cbp2 <- filter(cbp,
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
+===
+
 
 
 ~~~r
@@ -167,7 +169,7 @@ Equivalent to `sum(c(1,3,5))`, for example, we have:
 
 ===
 
-Additional arguments are accepted---pipe only handles the first.
+Additional arguments are accepted---the pipe only handles the first.
 
 
 
@@ -250,7 +252,7 @@ One way to "match" is by including complete names, each one you want to keep:
 
 ===
 
-Alternatively, we can use a "select helper"" to match patterns.
+Alternatively, we can use a "select helper" to match patterns.
 
 
 

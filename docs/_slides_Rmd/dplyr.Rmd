@@ -32,6 +32,8 @@ cbp2 <- filter(cbp,
   !grepl('------', NAICS))
 ```
 
+===
+
 ```{r}
 str(cbp2)
 ```
@@ -104,7 +106,7 @@ c(1, 3, 5) %>% sum()
 
 ===
 
-Additional arguments are accepted---pipe only handles the first.
+Additional arguments are accepted---the pipe only handles the first.
 
 ```{r pipe_example_2}
 c(1, 3, 5, NA) %>% sum(na.rm = TRUE)
@@ -155,7 +157,7 @@ cbp %>%
 
 ===
 
-Alternatively, we can use a "select helper"" to match patterns.
+Alternatively, we can use a "select helper" to match patterns.
 
 ```{r select, title = '{{ site.handouts[0] }}'}
 cbp <- cbp %>%

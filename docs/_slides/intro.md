@@ -3,9 +3,10 @@
 
 ## Lesson Objectives
 
-- Review what makes a dataset **tidy**
-- Learn to transform datasets with split-apply-combine procedures
-- Pay attention to code clarity
+- Review what makes a dataset tidy.
+- Meet a complete set of functions for most table manipulations.
+- Learn to transform datasets with split-apply-combine procedures.
+- Understand the basic join operation.
 
 ===
 

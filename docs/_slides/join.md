@@ -1,11 +1,14 @@
 ---
+excerpt: Join and Summarize
 ---
 
 ## Join
 
 The CBP dataset uses FIPS to identify U.S. counties and NAICS codes to identify
 types of industry. The ACS dataset also uses FIPS but their data may aggregate
-across multiple NAICS codes representing a single industry sectors.
+across multiple NAICS codes representing a single industry sector.
+
+===
 
 
 
@@ -20,18 +23,6 @@ many_to_one <- fread('data/ACS/sector_naics.csv')
 > View(many_to_one)
 ~~~
 {:.input title="Console"}
-
-
-~~~
-Warning in View(many_to_one): unable to open display
-~~~
-{:.output}
-
-
-~~~
-Error in .External2(C_dataviewer, x, title): unable to start data viewer
-~~~
-{:.output}
 
 
 Probably the primary challenge in combining secondary datasets for synthesis
@@ -65,18 +56,6 @@ Joining, by = "NAICS"
 > View(cbp_sector)
 ~~~
 {:.input title="Console"}
-
-
-~~~
-Warning in View(cbp_sector): unable to open display
-~~~
-{:.output}
-
-
-~~~
-Error in .External2(C_dataviewer, x, title): unable to start data viewer
-~~~
-{:.output}
 
 
 ===
@@ -271,6 +250,8 @@ The operation to perform on each group is summing: we need to sum the number of
 establishments in each group. Using [dplyr](){:.rlib} functions, the summaries
 are automically combined into a data frame.
 
+===
+
 
 
 ~~~r
@@ -332,16 +313,4 @@ establishments by employee bins) from the CBP table.
 > View(acs_cbp)
 ~~~
 {:.input title="Console"}
-
-
-~~~
-Warning in View(acs_cbp): unable to open display
-~~~
-{:.output}
-
-
-~~~
-Error in .External2(C_dataviewer, x, title): unable to start data viewer
-~~~
-{:.output}
 
