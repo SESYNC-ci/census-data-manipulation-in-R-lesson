@@ -23,7 +23,7 @@ HANDOUTS := $(shell ruby -e "require 'yaml';puts YAML.load_file('docs/_config.ym
 slides: $(SLIDES)
 $(SLIDES): | docs/_slides
 docs/_slides:
-	mkdir docs/_slides
+	mkdir -p docs/_slides
 ## cannot use a pattern as the next three targets, because
 ## the targets are only a subset of docs/_slides/%.md and
 ## they have different recipes
@@ -58,16 +58,15 @@ docs/Gemfile.lock:
 
 # target that brings this lesson into a course
 ## make target "course" is called within the handouts Makefile,
-## assumed to be at ../../
-## ignore the (symlinked) data/ subdirectory
-course: lesson $(addprefix ../../release/,$(filter-out data/%,$(HANDOUTS:worksheet%=worksheet-$(LESSON)%)))
-## copy lesson handouts to the ../../release/ directory
+## assumed to be at ../../Makefile
+course: lesson $(addprefix ../../handouts/,$(HANDOUTS:worksheet%=worksheet-$(LESSON)%))
+## copy lesson handouts to the ../../handouts/ directory
 ## while adding lesson numbers to worksheets
-../../release/worksheet-$(LESSON)%: worksheet%
+../../handouts/worksheet-$(LESSON)%: worksheet%
 	cp $< $@
-../../release/%: %
+../../handouts/%: %
 	mkdir -p $(dir $@)
-	cp $< $@
+	cp -r $< $@
 
 # target to archive a lesson
 ## call the archive target with a command line parameter for DATE
