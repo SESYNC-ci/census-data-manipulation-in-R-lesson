@@ -35,7 +35,9 @@ cbp <- fread(
   'data/cbp15co.csv',
   na.strings = c())
 
-acs <- fread('data/ACS/sector_ACS_15_5YR_S2413.csv')
+acs <- fread(
+  'data/ACS/sector_ACS_15_5YR_S2413.csv',
+  colClasses = c(FIPS = 'character'))
 
 ## dplyr Functions 
 
@@ -71,9 +73,11 @@ cbp3 <- mutate(cbp2,
     starts_with('N')
   )
 
-## Join 
+## Join
 
-sector <- fread('data/ACS/sector_naics.csv')
+sector <- fread(
+  'data/ACS/sector_naics.csv',
+  colClasses = c(NAICS = 'character'))
 
 cbp <- cbp %>%
   ...

@@ -11,7 +11,9 @@ across multiple NAICS codes representing a single industry sector.
 ===
 
 ```{r title = '{{ site.handouts[0] }}'}
-sector <- fread('data/ACS/sector_naics.csv')
+sector <- fread(
+  'data/ACS/sector_naics.csv',
+  colClasses = c(NAICS='character'))
 ```
 ```{r eval = FALSE}
 View(sector)

@@ -95,12 +95,6 @@ cbp_23 <- fread('data/cbp15co.csv', na.strings = '') %>%
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
-~~~
-Read 26.8% of 2126601 rowsRead 70.1% of 2126601 rowsRead 2126601 rows and 26 (of 26) columns from 0.167 GB file in 00:00:04
-~~~
-{:.output}
-
-
 [Return](#exercise-2)
 {:.notes}
 
@@ -120,12 +114,6 @@ cbp_21 <- fread('data/cbp15co.csv', na.strings = '') %>%
 {:.text-document title="{{ site.handouts[0] }}"}
 
 
-~~~
-Read 58.8% of 2126601 rowsRead 2126601 rows and 26 (of 26) columns from 0.167 GB file in 00:00:03
-~~~
-{:.output}
-
-
 [Return](#exercise-3)
 {:.notes}
 
@@ -143,12 +131,6 @@ pivot <- fread('data/cbp15co.csv', na.strings = '') %>%
   spread(key = NAICS, value = EMP)
 ~~~
 {:.text-document title="{{ site.handouts[0] }}"}
-
-
-~~~
-Read 55.0% of 2126601 rowsRead 98.3% of 2126601 rowsRead 2126601 rows and 26 (of 26) columns from 0.167 GB file in 00:00:04
-~~~
-{:.output}
 
 
 [Return](#exercise-4)

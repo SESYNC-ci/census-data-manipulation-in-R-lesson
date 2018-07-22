@@ -64,7 +64,9 @@ is no longer read into R as missing data (an `NA`) but as an empty string.
 ===
 
 ```{r title = '{{ site.handouts[0] }}', results = 'hide'}
-acs <- fread('data/ACS/sector_ACS_15_5YR_S2413.csv')
+acs <- fread(
+  'data/ACS/sector_ACS_15_5YR_S2413.csv',
+  colClasses = c(FIPS='character'))
 ```
 ```{r}
 str(acs)
