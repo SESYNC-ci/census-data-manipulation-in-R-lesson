@@ -17,6 +17,15 @@ tidy_trial <- ...(trial,
 
 ## Spread 
 
+survey <- read.delim(sep = ',', header = TRUE, text = "
+participant,   attr, val
+1          ,    age,  24
+2          ,    age,  57
+3          ,    age,  13
+1          , income,  30
+2          , income,  60
+")
+
 tidy_survey <- ...(survey,
   key = ...,
   value = ...)
