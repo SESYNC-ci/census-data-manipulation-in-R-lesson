@@ -120,7 +120,7 @@ At this point, nothing has really changed:
 
 ~~~
 Classes 'grouped_df', 'tbl_df', 'tbl' and 'data.frame':	56704 obs. of  16 variables:
- $ FIPS    : chr  "11" "11" "11" "11" ...
+ $ FIPS    : chr  "01001" "01001" "01001" "01001" ...
  $ NAICS   : chr  "11" "21" "22" "23" ...
  $ N1_4    : int  5 0 2 51 9 18 68 9 5 41 ...
  $ N5_9    : int  1 1 1 13 4 6 41 4 1 18 ...
@@ -138,77 +138,7 @@ Classes 'grouped_df', 'tbl_df', 'tbl' and 'data.frame':	56704 obs. of  16 variab
  $ Sector  : chr  "agriculture forestry fishing and hunting" "mining quarrying and oil and gas extraction" "utilities" "construction" ...
  - attr(*, "vars")= chr  "FIPS" "Sector"
  - attr(*, "drop")= logi TRUE
- - attr(*, "indices")=List of 55056
-  ..$ : int 5811
-  ..$ : int 5807
-  ..$ : int 5794
-  ..$ : int 5810
-  ..$ : int 5797
-  ..$ : int 5808
-  ..$ : int 5803
-  ..$ : int 5809
-  ..$ : int 5802
-  ..$ : int 5806
-  ..$ : int 5798
-  ..$ : int 5795
-  ..$ : int 5812
-  ..$ : int 5805
-  ..$ : int 5804
-  ..$ : int 5800
-  ..$ : int 5801
-  ..$ : int 5796
-  ..$ : int 5799
-  ..$ : int 5830
-  ..$ : int 5826
-  ..$ : int 5813
-  ..$ : int 5829
-  ..$ : int 5816
-  ..$ : int 5827
-  ..$ : int 5822
-  ..$ : int 5828
-  ..$ : int 5821
-  ..$ : int 5825
-  ..$ : int 5817
-  ..$ : int 5814
-  ..$ : int 5831
-  ..$ : int 5824
-  ..$ : int 5823
-  ..$ : int 5819
-  ..$ : int 5820
-  ..$ : int 5815
-  ..$ : int 5818
-  ..$ : int 5849
-  ..$ : int 5845
-  ..$ : int 5832
-  ..$ : int 5848
-  ..$ : int 5835
-  ..$ : int 5846
-  ..$ : int 5841
-  ..$ : int 5847
-  ..$ : int 5840
-  ..$ : int 5844
-  ..$ : int 5836
-  ..$ : int 5833
-  ..$ : int 5850
-  ..$ : int 5843
-  ..$ : int 5842
-  ..$ : int 5838
-  ..$ : int 5839
-  ..$ : int 5834
-  ..$ : int 5837
-  ..$ : int 5862
-  ..$ : int 5859
-  ..$ : int 5851
-  ..$ : int 5860
-  ..$ : int 5856
-  ..$ : int 5861
-  ..$ : int 5855
-  ..$ : int 5858
-  ..$ : int 5863
-  ..$ : int 5857
-  ..$ : int 5853
-  ..$ : int 5854
-  ..$ : int 5852
+ - attr(*, "indices")=List of 56704
   ..$ : int 17
   ..$ : int 13
   ..$ : int 0
@@ -228,21 +158,91 @@ Classes 'grouped_df', 'tbl_df', 'tbl' and 'data.frame':	56704 obs. of  16 variab
   ..$ : int 7
   ..$ : int 2
   ..$ : int 5
-  ..$ : int 936
-  ..$ : int 932
-  ..$ : int 919
-  ..$ : int 935
-  ..$ : int 922
-  ..$ : int 933
-  ..$ : int 928
-  ..$ : int 934
-  ..$ : int 927
-  ..$ : int 931
+  ..$ : int 36
+  ..$ : int 32
+  ..$ : int 19
+  ..$ : int 35
+  ..$ : int 22
+  ..$ : int 33
+  ..$ : int 28
+  ..$ : int 34
+  ..$ : int 27
+  ..$ : int 31
+  ..$ : int 23
+  ..$ : int 20
+  ..$ : int 37
+  ..$ : int 30
+  ..$ : int 29
+  ..$ : int 25
+  ..$ : int 26
+  ..$ : int 21
+  ..$ : int 24
+  ..$ : int 54
+  ..$ : int 50
+  ..$ : int 38
+  ..$ : int 53
+  ..$ : int 41
+  ..$ : int 51
+  ..$ : int 47
+  ..$ : int 52
+  ..$ : int 46
+  ..$ : int 42
+  ..$ : int 39
+  ..$ : int 55
+  ..$ : int 49
+  ..$ : int 48
+  ..$ : int 44
+  ..$ : int 45
+  ..$ : int 40
+  ..$ : int 43
+  ..$ : int 73
+  ..$ : int 69
+  ..$ : int 56
+  ..$ : int 72
+  ..$ : int 59
+  ..$ : int 70
+  ..$ : int 65
+  ..$ : int 71
+  ..$ : int 64
+  ..$ : int 68
+  ..$ : int 60
+  ..$ : int 57
+  ..$ : int 74
+  ..$ : int 67
+  ..$ : int 66
+  ..$ : int 62
+  ..$ : int 63
+  ..$ : int 58
+  ..$ : int 61
+  ..$ : int 92
+  ..$ : int 88
+  ..$ : int 75
+  ..$ : int 91
+  ..$ : int 78
+  ..$ : int 89
+  ..$ : int 84
+  ..$ : int 90
+  ..$ : int 83
+  ..$ : int 87
+  ..$ : int 79
+  ..$ : int 76
+  ..$ : int 93
+  ..$ : int 86
+  ..$ : int 85
+  ..$ : int 81
+  ..$ : int 82
+  ..$ : int 77
+  ..$ : int 80
+  ..$ : int 110
+  ..$ : int 106
+  ..$ : int 94
+  ..$ : int 109
+  ..$ : int 96
   .. [list output truncated]
  - attr(*, "group_sizes")= int  1 1 1 1 1 1 1 1 1 1 ...
- - attr(*, "biggest_group_size")= int 2
- - attr(*, "labels")='data.frame':	55056 obs. of  2 variables:
-  ..$ FIPS  : chr  "101" "101" "101" "101" ...
+ - attr(*, "biggest_group_size")= int 1
+ - attr(*, "labels")='data.frame':	56704 obs. of  2 variables:
+  ..$ FIPS  : chr  "01001" "01001" "01001" "01001" ...
   ..$ Sector: chr  "accommodation and food services" "administrative and support and waste management and remediation services" "agriculture forestry fishing and hunting" "arts entertainment and recreation" ...
   ..- attr(*, "vars")= chr  "FIPS" "Sector"
   ..- attr(*, "drop")= logi TRUE
