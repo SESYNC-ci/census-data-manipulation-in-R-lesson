@@ -42,7 +42,8 @@ cbp <- fread('data/cbp15co.csv')
 
 cbp <- fread(
   'data/cbp15co.csv',
-  na.strings = c())
+  ...,
+  ...)
 
 acs <- fread(
   'data/ACS/sector_ACS_15_5YR_S2413.csv',

@@ -80,7 +80,7 @@ Question
 
 Answer
 : {:.fragment} The CBP data contains an NAICS code not mapped to a sector---the
-"error code" 99 is not present in `many_to_one`. The use of "error codes" that
+"error code" 99 is not present in `sector`. The use of "error codes" that
 could easilly be mistaken for data is frowned upon.
 
 ===
