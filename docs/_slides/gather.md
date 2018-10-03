@@ -71,7 +71,7 @@ knowing what counts as a complete observation. For example, the community
 ecology package [vegan](){:.rlib} requires a matrix of species counts, where
 rows correspond to species and columns to sites. This may seem like too "wide" a
 format, but in the packages several multi-variate analyses, the abundance of a
-sepcies across multiple sites is considered a complete observation.
+species across multiple sites is considered a complete observation.
 {:.notes}
 
 ===
