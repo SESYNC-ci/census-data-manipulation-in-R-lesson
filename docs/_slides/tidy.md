@@ -17,7 +17,7 @@ practices for "normalization" in database design.
 
 ===
 
-Conser a data frame where the outcome of an experiment has been *recorded* in a perfectly appropriate way:
+Consider a data set where the outcome of an experiment has been *recorded* in a perfectly appropriate way:
 
 
 
