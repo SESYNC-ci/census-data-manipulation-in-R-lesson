@@ -1,3 +1,6 @@
+---
+---
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -8,9 +11,9 @@
 <meta name="description" content="Get your data in shape with tidyr & dplyr.">
 <link rel="canonical"
   href="http://cyberhelp.sesync.org/census-data-manipulation-in-R-lesson/course/archive.html">
-<link href="https://cdn.rawgit.com/sesync-ci/lesson-style/v2.0/docs/css/default.css" rel="stylesheet">
-<link href="https://cdn.rawgit.com/sesync-ci/lesson-style/v2.0/docs/css/syntax.css" rel="stylesheet">
-<link href="https://cdn.rawgit.com/sesync-ci/lesson-style/v2.0/docs/css/static.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/sesync-ci/lesson-style@v2.0/docs/css/default.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/sesync-ci/lesson-style@v2.0/docs/css/syntax.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/sesync-ci/lesson-style@v2.0/docs/css/static.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
@@ -308,7 +311,7 @@ result.</p>
 
 <h2 id="sample-data">Sample Data</h2>
 
-<p class="captioned"><img src="/census-data-manipulation-in-R-lesson/images/data.jpg" alt="" width="50%" /><br />
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/census-data-manipulation-in-R-lesson@v0.2/docs/assets/images/data.jpg" alt="" width="50%" /><br />
 <em>Credit: <a href="https://www.census.gov/programs-surveys/cbp.html">US Census Bureau</a></em></p>
 
 <p class="notes">To learn about data transformation with dplyr, we need more data. The Census
@@ -642,7 +645,7 @@ solution of re-aggregating data at the “lower resolution”.</p>
 <div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">View</span><span class="p">(</span><span class="n">cbp</span><span class="p">)</span><span class="w">
 </span></code></pre></div></div>
 
-<p><img src="/census-data-manipulation-in-R-lesson/images/many-to-one.svg" alt="" width="80%" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/census-data-manipulation-in-R-lesson@v0.2/docs/assets/images/many-to-one.svg" alt="" width="80%" /></p>
 
 <p class="notes">The NAICS field in the <code class="highlighter-rouge">cbp</code> table can have the same value multiple times, it is
 not a primary key in this table. In the <code class="highlighter-rouge">sector</code> table, the NAICS field is the
@@ -832,7 +835,7 @@ attributes introduced by <code class="highlighter-rouge">group_by</code> are dro
 by running the <code class="highlighter-rouge">str()</code> function on the data frame or by inspecting it in the
 RStudio <em>Environment</em> pane.</p>
 
-<p><img src="/census-data-manipulation-in-R-lesson/images/one-to-one.svg" alt="" width="80%" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/census-data-manipulation-in-R-lesson@v0.2/docs/assets/images/one-to-one.svg" alt="" width="80%" /></p>
 
 <p class="notes">There is now a one-to-one relationship between <code class="highlighter-rouge">cbp</code> and <code class="highlighter-rouge">acs</code>, based on
 the combination of FIPS and Sector as the primary key for both tables.</p>

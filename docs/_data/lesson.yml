@@ -1,0 +1,23 @@
+title: Manipulating Tabular Data
+handouts:
+  - worksheet.R
+  - data/cbp15co.csv
+  - data/ACS
+  - data/README.md
+tag: v0.2
+lesson: 4
+instructor: Mary Shelley
+authors:
+  - Philippe Marchand
+  - Ian Carroll
+sorter:
+  - intro
+  - tidy
+  - gather
+  - data
+  - dplyr
+  - join
+#  - db
+#  - pivot
+  - conclude
+  - exercise

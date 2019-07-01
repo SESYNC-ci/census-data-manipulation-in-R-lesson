@@ -11,7 +11,7 @@ The `mutate` function creates new columns from existing ones. The data frame ret
 
 The `count` variable just defined, for example, can be used to calculate the proportion of individuals represented by each species.
 
-```{r mutate, title="{{ site.handouts[0] }}"}
+```{r mutate, handout = 0}
 prop_1990_winter <- counts_1990_winter %>%
     mutate(prop = count / sum(count))
 ```

@@ -33,7 +33,7 @@ cbp2 <- filter(cbp,
   grepl('----', NAICS),
   !grepl('------', NAICS))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ===
@@ -43,7 +43,7 @@ cbp2 <- filter(cbp,
 ~~~r
 > str(cbp2)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -98,7 +98,7 @@ library(stringr)
 cbp2 <- filter(cbp,
   str_detect(NAICS, '[0-9]{2}----'))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 [regular expressions]: https://stringr.tidyverse.org/articles/regular-expressions.html
@@ -121,7 +121,7 @@ Here's one you've probably needed before:
 cbp3 <- mutate(cbp2,
   FIPS = str_c(FIPSTATE, FIPSCTY))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ===
@@ -135,7 +135,7 @@ cbp3 <- mutate(cbp2,
   FIPS = str_c(FIPSTATE, FIPSCTY),
   NAICS = str_remove(NAICS, '-+'))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ===
@@ -158,7 +158,7 @@ Equivalent to `sum(c(1,3,5))`, for example, we have:
 ~~~r
 > c(1, 3, 5) %>% sum()
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -176,7 +176,7 @@ Additional arguments are accepted---the pipe only handles the first.
 ~~~r
 > c(1, 3, 5, NA) %>% sum(na.rm = TRUE)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -205,7 +205,7 @@ cbp <- cbp %>%
     NAICS = str_remove(NAICS, '-+')
   )
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ===
@@ -220,7 +220,7 @@ the `select` function with arguments that match column names.
 ~~~r
 > names(cbp)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -247,7 +247,7 @@ One way to "match" is by including complete names, each one you want to keep:
 +     N1_4, N5_9, N10_19 # a better way?
 +   )
 ~~~
-{:.input title="Console"}
+{:title="Console" .no-eval .input}
 
 
 ===
@@ -264,5 +264,5 @@ cbp <- cbp %>%
     starts_with('N')
   )
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 

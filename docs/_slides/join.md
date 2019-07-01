@@ -17,14 +17,14 @@ sector <- fread(
   'data/ACS/sector_naics.csv',
   colClasses = c(NAICS='character'))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
 ~~~r
 > View(sector)
 ~~~
-{:.input title="Console"}
+{:title="Console" .no-eval .input}
 
 
 Probably the primary challenge in combining secondary datasets for synthesis
@@ -45,7 +45,7 @@ solution of re-aggregating data at the "lower resolution".
 cbp <- cbp %>%
   inner_join(sector)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
@@ -59,12 +59,12 @@ Joining, by = "NAICS"
 ~~~r
 > View(cbp)
 ~~~
-{:.input title="Console"}
+{:title="Console" .no-eval .input}
 
 
 ===
 
-![]({{ site.baseurl }}/images/many-to-one.svg){:width="80%"}
+![]({% include asset.html path="images/many-to-one.svg" %}){:width="80%"}
 
 The NAICS field in the `cbp` table can have the same value multiple times, it is
 not a primary key in this table. In the `sector` table, the NAICS field is the
@@ -103,7 +103,7 @@ frame should be split into subsets.
 cbp_grouped <- cbp %>%
   group_by(FIPS, Sector)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ===
@@ -115,7 +115,7 @@ At this point, nothing has really changed:
 ~~~r
 > str(cbp_grouped)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -136,116 +136,111 @@ Classes 'grouped_df', 'tbl_df', 'tbl' and 'data.frame':	56704 obs. of  16 variab
  $ N1000_3 : int  0 0 0 0 0 0 0 0 0 0 ...
  $ N1000_4 : int  0 0 0 0 0 0 0 0 0 0 ...
  $ Sector  : chr  "agriculture forestry fishing and hunting" "mining quarrying and oil and gas extraction" "utilities" "construction" ...
- - attr(*, "vars")= chr  "FIPS" "Sector"
- - attr(*, "drop")= logi TRUE
- - attr(*, "indices")=List of 56704
-  ..$ : int 17
-  ..$ : int 13
-  ..$ : int 0
-  ..$ : int 16
-  ..$ : int 3
-  ..$ : int 14
-  ..$ : int 9
-  ..$ : int 15
-  ..$ : int 8
-  ..$ : int 12
-  ..$ : int 4
-  ..$ : int 1
-  ..$ : int 18
-  ..$ : int 11
-  ..$ : int 10
-  ..$ : int 6
-  ..$ : int 7
-  ..$ : int 2
-  ..$ : int 5
-  ..$ : int 36
-  ..$ : int 32
-  ..$ : int 19
-  ..$ : int 35
-  ..$ : int 22
-  ..$ : int 33
-  ..$ : int 28
-  ..$ : int 34
-  ..$ : int 27
-  ..$ : int 31
-  ..$ : int 23
-  ..$ : int 20
-  ..$ : int 37
-  ..$ : int 30
-  ..$ : int 29
-  ..$ : int 25
-  ..$ : int 26
-  ..$ : int 21
-  ..$ : int 24
-  ..$ : int 54
-  ..$ : int 50
-  ..$ : int 38
-  ..$ : int 53
-  ..$ : int 41
-  ..$ : int 51
-  ..$ : int 47
-  ..$ : int 52
-  ..$ : int 46
-  ..$ : int 42
-  ..$ : int 39
-  ..$ : int 55
-  ..$ : int 49
-  ..$ : int 48
-  ..$ : int 44
-  ..$ : int 45
-  ..$ : int 40
-  ..$ : int 43
-  ..$ : int 73
-  ..$ : int 69
-  ..$ : int 56
-  ..$ : int 72
-  ..$ : int 59
-  ..$ : int 70
-  ..$ : int 65
-  ..$ : int 71
-  ..$ : int 64
-  ..$ : int 68
-  ..$ : int 60
-  ..$ : int 57
-  ..$ : int 74
-  ..$ : int 67
-  ..$ : int 66
-  ..$ : int 62
-  ..$ : int 63
-  ..$ : int 58
-  ..$ : int 61
-  ..$ : int 92
-  ..$ : int 88
-  ..$ : int 75
-  ..$ : int 91
-  ..$ : int 78
-  ..$ : int 89
-  ..$ : int 84
-  ..$ : int 90
-  ..$ : int 83
-  ..$ : int 87
-  ..$ : int 79
-  ..$ : int 76
-  ..$ : int 93
-  ..$ : int 86
-  ..$ : int 85
-  ..$ : int 81
-  ..$ : int 82
-  ..$ : int 77
-  ..$ : int 80
-  ..$ : int 110
-  ..$ : int 106
-  ..$ : int 94
-  ..$ : int 109
-  ..$ : int 96
-  .. [list output truncated]
- - attr(*, "group_sizes")= int  1 1 1 1 1 1 1 1 1 1 ...
- - attr(*, "biggest_group_size")= int 1
- - attr(*, "labels")='data.frame':	56704 obs. of  2 variables:
+ - attr(*, "groups")=Classes 'tbl_df', 'tbl' and 'data.frame':	56704 obs. of  3 variables:
   ..$ FIPS  : chr  "01001" "01001" "01001" "01001" ...
   ..$ Sector: chr  "accommodation and food services" "administrative and support and waste management and remediation services" "agriculture forestry fishing and hunting" "arts entertainment and recreation" ...
-  ..- attr(*, "vars")= chr  "FIPS" "Sector"
-  ..- attr(*, "drop")= logi TRUE
+  ..$ .rows :List of 56704
+  .. ..$ : int 18
+  .. ..$ : int 14
+  .. ..$ : int 1
+  .. ..$ : int 17
+  .. ..$ : int 4
+  .. ..$ : int 15
+  .. ..$ : int 10
+  .. ..$ : int 16
+  .. ..$ : int 9
+  .. ..$ : int 13
+  .. ..$ : int 5
+  .. ..$ : int 2
+  .. ..$ : int 19
+  .. ..$ : int 12
+  .. ..$ : int 11
+  .. ..$ : int 7
+  .. ..$ : int 8
+  .. ..$ : int 3
+  .. ..$ : int 6
+  .. ..$ : int 37
+  .. ..$ : int 33
+  .. ..$ : int 20
+  .. ..$ : int 36
+  .. ..$ : int 23
+  .. ..$ : int 34
+  .. ..$ : int 29
+  .. ..$ : int 35
+  .. ..$ : int 28
+  .. ..$ : int 32
+  .. ..$ : int 24
+  .. ..$ : int 21
+  .. ..$ : int 38
+  .. ..$ : int 31
+  .. ..$ : int 30
+  .. ..$ : int 26
+  .. ..$ : int 27
+  .. ..$ : int 22
+  .. ..$ : int 25
+  .. ..$ : int 55
+  .. ..$ : int 51
+  .. ..$ : int 39
+  .. ..$ : int 54
+  .. ..$ : int 42
+  .. ..$ : int 52
+  .. ..$ : int 48
+  .. ..$ : int 53
+  .. ..$ : int 47
+  .. ..$ : int 43
+  .. ..$ : int 40
+  .. ..$ : int 56
+  .. ..$ : int 50
+  .. ..$ : int 49
+  .. ..$ : int 45
+  .. ..$ : int 46
+  .. ..$ : int 41
+  .. ..$ : int 44
+  .. ..$ : int 74
+  .. ..$ : int 70
+  .. ..$ : int 57
+  .. ..$ : int 73
+  .. ..$ : int 60
+  .. ..$ : int 71
+  .. ..$ : int 66
+  .. ..$ : int 72
+  .. ..$ : int 65
+  .. ..$ : int 69
+  .. ..$ : int 61
+  .. ..$ : int 58
+  .. ..$ : int 75
+  .. ..$ : int 68
+  .. ..$ : int 67
+  .. ..$ : int 63
+  .. ..$ : int 64
+  .. ..$ : int 59
+  .. ..$ : int 62
+  .. ..$ : int 93
+  .. ..$ : int 89
+  .. ..$ : int 76
+  .. ..$ : int 92
+  .. ..$ : int 79
+  .. ..$ : int 90
+  .. ..$ : int 85
+  .. ..$ : int 91
+  .. ..$ : int 84
+  .. ..$ : int 88
+  .. ..$ : int 80
+  .. ..$ : int 77
+  .. ..$ : int 94
+  .. ..$ : int 87
+  .. ..$ : int 86
+  .. ..$ : int 82
+  .. ..$ : int 83
+  .. ..$ : int 78
+  .. ..$ : int 81
+  .. ..$ : int 111
+  .. ..$ : int 107
+  .. ..$ : int 95
+  .. ..$ : int 110
+  .. ..$ : int 97
+  .. .. [list output truncated]
+  ..- attr(*, ".drop")= logi TRUE
 ~~~
 {:.output}
 
@@ -274,7 +269,7 @@ cbp <- cbp %>%
   select(starts_with('N'), -NAICS) %>%
   summarize_all(sum)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
@@ -291,7 +286,7 @@ RStudio *Environment* pane.
 
 ===
 
-![]({{ site.baseurl }}/images/one-to-one.svg){:width="80%"}
+![]({% include asset.html path="images/one-to-one.svg" %}){:width="80%"}
 
 There is now a one-to-one relationship between `cbp` and `acs`, based on
 the combination of FIPS and Sector as the primary key for both tables.
@@ -305,7 +300,7 @@ the combination of FIPS and Sector as the primary key for both tables.
 acs_cbp <- cbp %>%
   inner_join(acs)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
@@ -331,5 +326,5 @@ establishments by employee bins) from the CBP table.
 ~~~r
 > View(acs_cbp)
 ~~~
-{:.input title="Console"}
+{:title="Console" .no-eval .input}
 

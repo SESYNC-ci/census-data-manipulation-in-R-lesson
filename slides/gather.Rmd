@@ -7,7 +7,7 @@ excerpt: Wide or Long
 The [tidyr](){:.rlib} package's `gather` function reshapes "wide" data frames
 into "long" ones.
 
-```{r title = '{{ site.handouts[0] }}'}
+```{r handout = 0}
 library(tidyr)
 tidy_trial <- gather(trial,
   key = "treatment",
@@ -72,7 +72,7 @@ kable(survey)
 
 Transform the data with the `spread` function, which "reverses" a `gather`.
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 tidy_survey <- spread(survey,
   key = attr,
   value = val)
@@ -100,7 +100,7 @@ rather than a single cell is missing. Think about what "missing data" could mean
 here---perhaps you can supply a value instead of the `NA` in the previous
 result.
 
-```{r, title = '{{ site.handouts[0] }}'}
+```{r, handout = 0}
 tidy_survey <- spread(survey,
   key = attr,
   value = val,

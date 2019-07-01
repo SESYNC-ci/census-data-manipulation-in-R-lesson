@@ -5,7 +5,7 @@
 
 ## Sample Data
 
-![]({{ site.baseurl }}/images/data.jpg){: width="50%"}  
+![]({% include asset.html path="images/data.jpg" %}){: width="50%"}  
 *Credit: [US Census Bureau](https://www.census.gov/programs-surveys/cbp.html)*
 {:.captioned}
 
@@ -33,14 +33,14 @@ median income for individuals working in different industries.
 library(data.table)
 cbp <- fread('data/cbp15co.csv')
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
 ~~~r
 > str(cbp)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -48,7 +48,7 @@ Classes 'data.table' and 'data.frame':	2126601 obs. of  26 variables:
  $ FIPSTATE: int  1 1 1 1 1 1 1 1 1 1 ...
  $ FIPSCTY : int  1 1 1 1 1 1 1 1 1 1 ...
  $ NAICS   : chr  "------" "11----" "113///" "1133//" ...
- $ EMPFLAG : chr  NA NA NA NA ...
+ $ EMPFLAG : chr  "" "" "" "" ...
  $ EMP_NF  : chr  "G" "H" "H" "H" ...
  $ EMP     : int  10454 70 70 70 70 70 0 0 0 0 ...
  $ QP1_NF  : chr  "G" "H" "H" "H" ...
@@ -98,7 +98,7 @@ cbp <- fread(
     FIPSTATE='character',
     FIPSCTY='character'))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ===
@@ -120,14 +120,14 @@ acs <- fread(
   'data/ACS/sector_ACS_15_5YR_S2413.csv',
   colClasses = c(FIPS='character'))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 
 ~~~r
 > str(acs)
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -135,7 +135,7 @@ Classes 'data.table' and 'data.frame':	59698 obs. of  4 variables:
  $ FIPS         : chr  "01001" "01003" "01005" "01007" ...
  $ County       : chr  "Autauga County, Alabama" "Baldwin County, Alabama" "Barbour County, Alabama" "Bibb County, Alabama" ...
  $ Sector       : chr  "agriculture forestry fishing and hunting" "agriculture forestry fishing and hunting" "agriculture forestry fishing and hunting" "agriculture forestry fishing and hunting" ...
- $ median_income: chr  "27235" "40017" "32260" "22240" ...
+ $ median_income: int  27235 40017 32260 22240 21260 30469 33300 39784 40417 20370 ...
  - attr(*, ".internal.selfref")=<externalptr> 
 ~~~
 {:.output}

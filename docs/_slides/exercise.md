@@ -63,7 +63,7 @@ NAICS code (as columns).
 gather(tidy_survey, key = "attr",
   value = "val", -participant)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ~~~
@@ -92,7 +92,7 @@ cbp_23 <- fread('data/cbp15co.csv', na.strings = '') %>%
   filter(NAICS == '23----') %>%
   select(starts_with('FIPS'), starts_with('AP'))
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 [Return](#exercise-2)
@@ -111,7 +111,7 @@ cbp_21 <- fread('data/cbp15co.csv', na.strings = '') %>%
   summarize(EMP = sum(EMP)) %>%
   summarize(EMP = sum(EMP), counties = n())
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 [Return](#exercise-3)
@@ -130,7 +130,7 @@ pivot <- fread('data/cbp15co.csv', na.strings = '') %>%
   summarize(EMP = sum(EMP)) %>%
   spread(key = NAICS, value = EMP)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 [Return](#exercise-4)

@@ -19,7 +19,7 @@ practices for "normalization" in database design.
 
 Consider a data set where the outcome of an experiment has been *recorded* in a perfectly appropriate way:
 
-```{r, echo = FALSE, title = '{{ site.handouts[0] }}'}
+```{r, echo = FALSE, handout = 0}
 trial <- read.delim(sep = ',', header = TRUE, text = "
 block, drug, control, placebo
     1, 0.22,    0.58,    0.31

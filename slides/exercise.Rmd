@@ -57,7 +57,7 @@ NAICS code (as columns).
 
 ### Solution 1
 
-```{r title = '{{ site.handouts[0] }}'}
+```{r handout = 0}
 gather(tidy_survey, key = "attr",
   value = "val", -participant)
 ```
@@ -69,7 +69,7 @@ gather(tidy_survey, key = "attr",
 
 ### Solution 2
 
-```{r title = '{{ site.handouts[0] }}'}
+```{r handout = 0}
 cbp_23 <- fread('data/cbp15co.csv', na.strings = '') %>%
   filter(NAICS == '23----') %>%
   select(starts_with('FIPS'), starts_with('AP'))
@@ -82,7 +82,7 @@ cbp_23 <- fread('data/cbp15co.csv', na.strings = '') %>%
 
 ### Solution 3
 
-```{r title = '{{ site.handouts[0] }}'}
+```{r handout = 0}
 cbp_21 <- fread('data/cbp15co.csv', na.strings = '') %>%
   filter(NAICS == '21----') %>%
   group_by(FIPSTATE, FIPSCTY) %>%
@@ -97,7 +97,7 @@ cbp_21 <- fread('data/cbp15co.csv', na.strings = '') %>%
 
 ### Solution 4
 
-```{r title = '{{ site.handouts[0] }}'}
+```{r handout = 0}
 pivot <- fread('data/cbp15co.csv', na.strings = '') %>%
   filter(str_detect(NAICS, '[0-9]{2}----')) %>%
   group_by(FIPSTATE, NAICS) %>%

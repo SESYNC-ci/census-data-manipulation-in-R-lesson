@@ -14,7 +14,7 @@ the health care sector?
 
 The dplyr function `group_by` begins the process by indicating how the data frame should be split into subsets.
 
-```{r summarize, title="{{ site.handouts[0] }}"}
+```{r summarize, handout = 0}
 state_cbp_health_care <- cbp_health_care %>%
     group_by(FIPSTATE)
 ```
@@ -40,7 +40,7 @@ these columns defines a different group.
 The operation to perform on each species is summing: we need to sum employment
 are in each group.
 
-```{r summarize_n, title="{{ site.handouts[0] }}"}
+```{r summarize_n, handout = 0}
 state_cbp_health_care <- cbp_health_care %>%
     group_by(FIPSTATE) %>%
     summarize(EMP = sum(EMP))
@@ -60,7 +60,7 @@ The "combine" part of "split-apply-combine" occurs automatically, when the attri
 
 The function `n()` takes no arguments and returns the number of records in a group. Any function that collapses a vector input to a single output is a suitable function to use within `summarize`.
 
-```{r title="{{ site.handouts[0] }}"}
+```{r handout = 0}
 state_cbp_health_care <- cbp_health_care %>%
     group_by(FIPSTATE) %>%
     summarize(EMP = sum(EMP),

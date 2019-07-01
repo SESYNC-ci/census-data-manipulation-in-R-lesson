@@ -1,4 +1,7 @@
 ---
+---
+
+---
 title: "Data manipulation with tidyr and dplyr"
 author: "Philippe Marchand"
 output: md_document

@@ -16,7 +16,7 @@ tidy_trial <- gather(trial,
   value = "response",
   -block)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 All columns, accept for "block", are stacked in two columns: a "key" and a
@@ -32,7 +32,7 @@ of the column and the value from the data in the column.
 ~~~r
 > tidy_trial
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -102,7 +102,7 @@ tidy_survey <- spread(survey,
   key = attr,
   value = val)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ===
@@ -112,7 +112,7 @@ tidy_survey <- spread(survey,
 ~~~r
 > tidy_survey
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~
@@ -148,7 +148,7 @@ tidy_survey <- spread(survey,
   value = val,
   fill = 0)
 ~~~
-{:.text-document title="{{ site.handouts[0] }}"}
+{:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
 ===
@@ -158,7 +158,7 @@ tidy_survey <- spread(survey,
 ~~~r
 > tidy_survey
 ~~~
-{:.input title="Console"}
+{:title="Console" .input}
 
 
 ~~~

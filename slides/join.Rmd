@@ -10,7 +10,7 @@ across multiple NAICS codes representing a single industry sector.
 
 ===
 
-```{r title = '{{ site.handouts[0] }}'}
+```{r handout = 0}
 sector <- fread(
   'data/ACS/sector_naics.csv',
   colClasses = c(NAICS='character'))
@@ -31,7 +31,7 @@ solution of re-aggregating data at the "lower resolution".
 
 ### Many-to-One
 
-```{r title = '{{ site.handouts[0] }}'}
+```{r handout = 0}
 cbp <- cbp %>%
   inner_join(sector)
 ```
@@ -42,7 +42,7 @@ View(cbp)
 
 ===
 
-![]({{ site.baseurl }}/images/many-to-one.svg){:width="80%"}
+![]({% include asset.html path="images/many-to-one.svg" %}){:width="80%"}
 
 The NAICS field in the `cbp` table can have the same value multiple times, it is
 not a primary key in this table. In the `sector` table, the NAICS field is the
@@ -75,7 +75,7 @@ in each size class *aggregated within* each county and industry sector.
 The dplyr function `group_by` begins the process by indicating how the data
 frame should be split into subsets.
 
-```{r title = '{{ site.handouts[0] }}'}
+```{r handout = 0}
 cbp_grouped <- cbp %>%
   group_by(FIPS, Sector)
 ```
@@ -104,7 +104,7 @@ are automically combined into a data frame.
 
 ===
 
-```{r title = '{{ site.handouts[0] }}'}
+```{r handout = 0}
 cbp <- cbp %>%
   group_by(FIPS, Sector) %>%
   select(starts_with('N'), -NAICS) %>%
@@ -119,7 +119,7 @@ RStudio *Environment* pane.
 
 ===
 
-![]({{ site.baseurl }}/images/one-to-one.svg){:width="80%"}
+![]({% include asset.html path="images/one-to-one.svg" %}){:width="80%"}
 
 There is now a one-to-one relationship between `cbp` and `acs`, based on
 the combination of FIPS and Sector as the primary key for both tables.
@@ -127,7 +127,7 @@ the combination of FIPS and Sector as the primary key for both tables.
 
 ===
 
-```{r title = '{{ site.handouts[0] }}'}
+```{r handout = 0}
 acs_cbp <- cbp %>%
   inner_join(acs)
 ```

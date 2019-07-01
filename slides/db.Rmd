@@ -7,7 +7,7 @@ The [dplyr](){:.rlib} package reads data from multiple kinds of sources. We used
 
 To read the "animals" table from a PostgreSQL database server using R as a database client:
 
-```{r title="{{ site.handouts[0] }}"}
+```{r handout = 0}
 library(RPostgreSQL)
 
 con <- dbConnect(PostgreSQL(), host = 'localhost', dbname = 'portal')
@@ -21,7 +21,7 @@ The "localhost" is not a typical location for a database server (because "localh
 
 Many of the exact same operations can be performed *by the database* system, because the [dplyr](){:.rlib} functions map to standard structured query language (SQL) operations.
 
-```{r title="{{ site.handouts[0] }}"}
+```{r handout = 0}
 species_month_prop <- animals_db %>%
     group_by(species_id, month) %>%
     summarize(count = n()) %>%
@@ -37,7 +37,7 @@ species_month_prop
 
 To complete the pivot table, however, the `species_month_prop` values must be copied into a R data.frame using `collect` for processing with `spread`. There is no SQL equivalent for what `spread` does.
 
-```{r title = '{{ site.handouts[0] }}'}
+```{r handout = 0}
 pivot <- species_month_prop %>%
   collect() %>%
   spread(month, prop, fill = 0)
