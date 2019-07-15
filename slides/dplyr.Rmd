@@ -5,7 +5,7 @@
 
 | Function    | Returns                                            |
 |-------------+----------------------------------------------------|
-| `filter`    | keep rows that staisfy conditions                  |
+| `filter`    | keep rows that satisfy conditions                  |
 | `mutate`    | apply a transformation to existing [split] columns |
 | `select`    | keep columns with matching names                   |
 | `inner_join`| merge columns from separate tables into one table  |
