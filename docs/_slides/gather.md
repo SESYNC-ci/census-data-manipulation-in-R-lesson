@@ -124,14 +124,6 @@ tidy_survey <- spread(survey,
 {:.output}
 
 
-===
-
-Question
-: Why were `attr` and `val` not quoted in the call to `spread`?
-
-Answer
-: {:.fragment} They refer to existing column names. In `gather`, quotes are used
-to create new column names.
 
 ===
 
