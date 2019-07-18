@@ -157,7 +157,7 @@ cbp %>%
 
 ===
 
-Alternatively, we can use a "select helper" to match patterns.
+Alternatively, we can use a "[select helper](https://dplyr.tidyverse.org/reference/select.html#useful-functions)" to match patterns.
 
 ```{r select, handout = 0}
 cbp <- cbp %>%

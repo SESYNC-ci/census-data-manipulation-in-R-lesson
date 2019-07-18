@@ -10,6 +10,11 @@ While there is little difference with the 60,000 row ACS table, there
 is a notable improvement with the >2M row CBP table (0.5 vs 7 seconds). 
 * Lesson should be updated to include [pivot_*](https://tidyr.tidyverse.org/dev/articles/pivot.html)
 functions to replace `gather` and `spread`. 
+* In `str_detect`, the regex `[0-9]` matches any number, `{2}` means
+exactly 2 matches, and the `----` matches exactly. 
+* In `str_remove`, the regex `-+` matches "1 or more `-`"
+* For troubleshooting `select`, try specifying `dplyr::select` in 
+case there are conflicting packages loaded. 
 
 ## Cyberhelp @SESYNC
 

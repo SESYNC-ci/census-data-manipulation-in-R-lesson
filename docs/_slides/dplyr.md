@@ -5,7 +5,7 @@
 
 | Function    | Returns                                            |
 |-------------+----------------------------------------------------|
-| `filter`    | keep rows that staisfy conditions                  |
+| `filter`    | keep rows that satisfy conditions                  |
 | `mutate`    | apply a transformation to existing [split] columns |
 | `select`    | keep columns with matching names                   |
 | `inner_join`| merge columns from separate tables into one table  |
@@ -252,7 +252,7 @@ One way to "match" is by including complete names, each one you want to keep:
 
 ===
 
-Alternatively, we can use a "select helper" to match patterns.
+Alternatively, we can use a "[select helper](https://dplyr.tidyverse.org/reference/select.html#useful-functions)" to match patterns.
 
 
 
