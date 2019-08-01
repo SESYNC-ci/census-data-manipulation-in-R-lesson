@@ -1,0 +1,1043 @@
+---
+---
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Manipulating Tabular Data</title>
+<meta name="description" content="Get your data in shape with tidyr & dplyr.">
+<link rel="canonical"
+      href="https://sesync-ci.github.io/census-data-manipulation-in-R-lesson/2019/07/23/index.html">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sesync-ci/lesson-style@3.0/docs/assets/css/default.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sesync-ci/lesson-style@3.0/docs/assets/css/syntax.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/sesync-ci/lesson-style@3.0/docs/assets/css/static.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<link href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+      rel="stylesheet"
+      integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+      crossorigin="anonymous">
+
+    
+  </head>
+  <body>
+    <div class="page-content">
+      <div class="wrapper">
+        
+
+<h1 style="text-transform: none;" id="manipulating-tabular-data">Manipulating Tabular Data</h1>
+
+<p>Lesson 4 with <em>Kelly Hondula</em></p>
+
+<nav id="ToC">
+
+  <ul>
+    <li><a href="#/slides/intro">Lesson Objectives</a></li>
+    <li><a href="#/slides/tidy">Tidy Concept</a></li>
+    <li><a href="#/slides/gather">Wide or Long</a></li>
+    <li><a href="#/slides/data">Sample Data</a></li>
+    <li><a href="#/slides/dplyr">dplyr Functions</a></li>
+    <li><a href="#/slides/join">Join and Summarize</a></li>
+    <li><a href="#/slides/conclude">Additional Resources</a></li>
+    <li><a href="#/slides/exercise">Exercises</a></li>
+  </ul>
+</nav>
+
+<hr />
+<p><a name="/slides/intro"></a></p>
+
+<h2 id="lesson-objectives">Lesson Objectives</h2>
+
+<ul>
+  <li>Review what makes a dataset tidy.</li>
+  <li>Meet a complete set of functions for most table manipulations.</li>
+  <li>Learn to transform datasets with split-apply-combine procedures.</li>
+  <li>Understand the basic join operation.</li>
+</ul>
+
+<h2 id="specific-achievements">Specific Achievements</h2>
+
+<ul>
+  <li>Reshape data frames with <a href="" class="rlib">tidyr</a></li>
+  <li>Summarize data by groups with <a href="" class="rlib">dplyr</a></li>
+  <li>Combine multiple data frame operations with pipes</li>
+  <li>Combine multiple data frames with “joins”</li>
+</ul>
+
+<p class="notes">Data frames occupy a central place in R analysis pipelines. While the base R
+functions provide most necessary tools to subset, reformat and transform data
+frames, the specialized packages in this lesson offer friendlier and often
+computationally faster ways to perform common data frame processing steps. The
+uniform syntax of the <a href="" class="rlib">tidyr</a> and <a href="" class="rlib">dplyr</a> packages also
+makes scripts more readable and easier to debug. The key functions in both
+packages have close counterparts in SQL (Structured Query Language), which
+provides the added bonus of facilitating translation between R and relational
+databases.</p>
+
+<p class="ToS"><a href="#/slides/intro">Top of Section</a></p>
+
+<hr />
+<p><a name="/slides/tidy"></a></p>
+
+<h2 id="tidy-concept">Tidy Concept</h2>
+
+<p>R developer Hadley Wickham (author of the <a href="" class="rlib">tidyr</a>, <a href="" class="rlib">dplyr</a>
+and <a href="" class="rlib">ggplot2</a> packages, among others) defines tidy datasets (<a href="http://www.jstatsoft.org/v59/i10/paper">Wickham
+2014</a>) as those where:</p>
+
+<ul>
+  <li>each variable forms a column</li>
+  <li>each observation forms a row</li>
+  <li>each type of observational unit forms a table</li>
+</ul>
+
+<p class="notes">These guidelines may be familiar to some of you—they closely map to best
+practices for “normalization” in database design.</p>
+
+<p>Consider a data set where the outcome of an experiment has been <em>recorded</em> in a perfectly appropriate way:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: right">block</th>
+      <th style="text-align: right">drug</th>
+      <th style="text-align: right">control</th>
+      <th style="text-align: right">placebo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: right">1</td>
+      <td style="text-align: right">0.22</td>
+      <td style="text-align: right">0.58</td>
+      <td style="text-align: right">0.31</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">2</td>
+      <td style="text-align: right">0.12</td>
+      <td style="text-align: right">0.98</td>
+      <td style="text-align: right">0.47</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">3</td>
+      <td style="text-align: right">0.42</td>
+      <td style="text-align: right">0.19</td>
+      <td style="text-align: right">0.40</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The response data are present in a compact matrix, as you might record it on a
+spreadsheet. The form does not match how we think about a statistical model,
+such as:</p>
+
+<script type="math/tex; mode=display">response \sim block + treatment</script>
+
+<p class="notes">In a tidy format, each row is a complete observation: it includes the response
+value and all the predictor values. In this data, some of those predictor values
+are column headers, so the table needs to be reshaped. The <a href="" class="rlib">tidyr</a>
+package provides functions to help re-organize tables.</p>
+
+<p class="notes">The third principle of tidy data, one table per category of observed entities,
+becomes especially important in synthesis research. Following this principle
+requires holding tidy data in multiple tables, with associations between them
+formalized in metadata, as in a relational database.</p>
+
+<p>Datasets split across multiple tables are unavoidable in synthesis
+research, and commonly used in the following two ways (often in combination):</p>
+
+<ul>
+  <li>two tables are “un-tidied” by joins, or merging them into one table</li>
+  <li>statistical models conform to the data model through a hierarchical structure
+or employing “random effects”</li>
+</ul>
+
+<p>The <a href="" class="rlib">dplyr</a> package includes several functions that all perform
+variations on table joins needed to “un-tidy” your tables, but there are only
+two basic types of table relationships to recognize:</p>
+
+<ul>
+  <li><strong>One-to-one</strong> relationships allow tables to be combined based on the same
+unique identifier (or “primary key”) in both tables.</li>
+  <li><strong>Many-to-one</strong> relationships require non-unique “foreign keys” in the first
+table to match the primary key of the second.</li>
+</ul>
+
+<p class="ToS"><a href="#/slides/tidy">Top of Section</a></p>
+
+<hr />
+<p><a name="/slides/gather"></a></p>
+
+<h2 id="gather">Gather</h2>
+
+<p>The <a href="" class="rlib">tidyr</a> package’s <code class="highlighter-rouge">gather</code> function reshapes “wide” data frames
+into “long” ones.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">tidyr</span><span class="p">)</span><span class="w">
+</span><span class="n">tidy_trial</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">gather</span><span class="p">(</span><span class="n">trial</span><span class="p">,</span><span class="w">
+  </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"treatment"</span><span class="p">,</span><span class="w">
+  </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"response"</span><span class="p">,</span><span class="w">
+  </span><span class="o">-</span><span class="n">block</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p class="notes">All columns, accept for “block”, are stacked in two columns: a “key” and a
+“value”. The key column gets the name <code class="highlighter-rouge">treatment</code> and the value column reveives
+the name <code class="highlighter-rouge">response</code>. For each row in the result, the key is taken from the name
+of the column and the value from the data in the column.</p>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">tidy_trial</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  block treatment response
+1     1      drug     0.22
+2     2      drug     0.12
+3     3      drug     0.42
+4     1   control     0.58
+5     2   control     0.98
+6     3   control     0.19
+7     1   placebo     0.31
+8     2   placebo     0.47
+9     3   placebo     0.40
+</code></pre></div></div>
+
+<p class="notes">Some notes on the syntax: a big advantage of <a href="" class="rlib">tidyr</a> and
+<a href="" class="rlib">dplyr</a> is that each function takes a data frame as its first argument
+and returns a new data frame. As we will see later, it makes it very easy to
+chain these functions in a pipeline. All functions also use column names as
+variables without subsetting them from a data frame (i.e. <code class="highlighter-rouge">block</code> instead of
+<code class="highlighter-rouge">trial$block</code>).</p>
+
+<h2 id="spread">Spread</h2>
+
+<p>Data can also fail to be tidy when a table is too long. The
+Entity-Attribute-Value (EAV) structure common in large databases distributes
+multible attributes of a single entity/observation into separate rows.</p>
+
+<p class="notes">Remember that the exact state of “tidy” may depend on the analysis: the key is
+knowing what counts as a complete observation. For example, the community
+ecology package <a href="" class="rlib">vegan</a> requires a matrix of species counts, where
+rows correspond to species and columns to sites. This may seem like too “wide” a
+format, but in the packages several multi-variate analyses, the abundance of a
+species across multiple sites is considered a complete observation.</p>
+
+<p>Consider survey data on participant’s age and income <em>stored</em> in a EAV
+structure.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: right">participant</th>
+      <th style="text-align: left">attr</th>
+      <th style="text-align: right">val</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: right">1</td>
+      <td style="text-align: left">age</td>
+      <td style="text-align: right">24</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">2</td>
+      <td style="text-align: left">age</td>
+      <td style="text-align: right">57</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">3</td>
+      <td style="text-align: left">age</td>
+      <td style="text-align: right">13</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">1</td>
+      <td style="text-align: left">income</td>
+      <td style="text-align: right">30</td>
+    </tr>
+    <tr>
+      <td style="text-align: right">2</td>
+      <td style="text-align: left">income</td>
+      <td style="text-align: right">60</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Transform the data with the <code class="highlighter-rouge">spread</code> function, which “reverses” a <code class="highlighter-rouge">gather</code>.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">tidy_survey</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">spread</span><span class="p">(</span><span class="n">survey</span><span class="p">,</span><span class="w">
+  </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">attr</span><span class="p">,</span><span class="w">
+  </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">tidy_survey</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  participant     age  income
+1           1      24      30
+2           2      57      60
+3           3      13      NA
+</code></pre></div></div>
+
+<p>One difficulty with EAV tables is the nature of missing data; an entire row
+rather than a single cell is missing. Think about what “missing data” could mean
+here—perhaps you can supply a value instead of the <code class="highlighter-rouge">NA</code> in the previous
+result.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">tidy_survey</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">spread</span><span class="p">(</span><span class="n">survey</span><span class="p">,</span><span class="w">
+  </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">attr</span><span class="p">,</span><span class="w">
+  </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">val</span><span class="p">,</span><span class="w">
+  </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">tidy_survey</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  participant     age  income
+1           1      24      30
+2           2      57      60
+3           3      13       0
+</code></pre></div></div>
+
+<p class="ToS"><a href="#/slides/gather">Top of Section</a></p>
+
+<hr />
+<p><a name="/slides/data"></a></p>
+
+<h2 id="sample-data">Sample Data</h2>
+
+<p class="captioned"><img src="https://cdn.jsdelivr.net/gh/sesync-ci/census-data-manipulation-in-R-lesson@v0.2/docs/assets/images/data.jpg" alt="" width="50%" /><br />
+<em>Credit: <a href="https://www.census.gov/programs-surveys/cbp.html">US Census Bureau</a></em></p>
+
+<p class="notes">To learn about data transformation with dplyr, we need more data. The Census
+Bureau collects subnational economic data for the U.S., releasing annual <a href="https://www.census.gov/programs-surveys/cbp/data/datasets.html">County
+Business Patterns (CBP)</a> datasets including the number of establishments,
+employment, and payroll by industry. They also conduct the <a href="https://www.census.gov/programs-surveys/acs/">American Community
+Survey (ACS)</a> and publish, among other demographic and economic variables, estimates of
+median income for individuals working in different industries.</p>
+
+<ul>
+  <li><a href="https://www.census.gov/programs-surveys/cbp/data/datasets.html">County Business Patterns (CBP)</a></li>
+  <li><a href="https://www.census.gov/programs-surveys/acs/">American Community Survey (ACS)</a></li>
+</ul>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">data.table</span><span class="p">)</span><span class="w">
+</span><span class="n">cbp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fread</span><span class="p">(</span><span class="s1">'data/cbp15co.csv'</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">str</span><span class="p">(</span><span class="n">cbp</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Classes 'data.table' and 'data.frame':	2126601 obs. of  26 variables:
+ $ FIPSTATE: int  1 1 1 1 1 1 1 1 1 1 ...
+ $ FIPSCTY : int  1 1 1 1 1 1 1 1 1 1 ...
+ $ NAICS   : chr  "------" "11----" "113///" "1133//" ...
+ $ EMPFLAG : chr  "" "" "" "" ...
+ $ EMP_NF  : chr  "G" "H" "H" "H" ...
+ $ EMP     : int  10454 70 70 70 70 70 0 0 0 0 ...
+ $ QP1_NF  : chr  "G" "H" "H" "H" ...
+ $ QP1     : int  76437 790 790 790 790 790 0 0 0 0 ...
+ $ AP_NF   : chr  "G" "H" "H" "H" ...
+ $ AP      : int  321433 3566 3551 3551 3551 3551 0 0 0 0 ...
+ $ EST     : int  844 7 6 6 6 6 1 1 1 1 ...
+ $ N1_4    : int  430 5 4 4 4 4 1 1 1 1 ...
+ $ N5_9    : int  171 1 1 1 1 1 0 0 0 0 ...
+ $ N10_19  : int  118 0 0 0 0 0 0 0 0 0 ...
+ $ N20_49  : int  81 0 0 0 0 0 0 0 0 0 ...
+ $ N50_99  : int  35 1 1 1 1 1 0 0 0 0 ...
+ $ N100_249: int  6 0 0 0 0 0 0 0 0 0 ...
+ $ N250_499: int  2 0 0 0 0 0 0 0 0 0 ...
+ $ N500_999: int  1 0 0 0 0 0 0 0 0 0 ...
+ $ N1000   : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_1 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_2 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_3 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_4 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ CENSTATE: int  63 63 63 63 63 63 63 63 63 63 ...
+ $ CENCTY  : int  1 1 1 1 1 1 1 1 1 1 ...
+ - attr(*, ".internal.selfref")=&lt;externalptr&gt; 
+</code></pre></div></div>
+
+<p class="notes">See the <a href="https://www2.census.gov/programs-surveys/rhfs/cbp/technical%20documentation/2015_record_layouts/county_layout_2015.txt">CBP dataset documentation</a> for an explanation of the variables we don’t
+discuss in this lesson.</p>
+
+<p>Modify the import to clean up this read: consider the data type for FIPS codes
+along with what string in this CSV file represents NAs, a.k.a. data that is
+not-available or missing.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">cbp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fread</span><span class="p">(</span><span class="w">
+  </span><span class="s1">'data/cbp15co.csv'</span><span class="p">,</span><span class="w">
+  </span><span class="n">na.strings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NULL</span><span class="p">,</span><span class="w">
+  </span><span class="n">colClasses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="w">
+    </span><span class="n">FIPSTATE</span><span class="o">=</span><span class="s1">'character'</span><span class="p">,</span><span class="w">
+    </span><span class="n">FIPSCTY</span><span class="o">=</span><span class="s1">'character'</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<dl>
+  <dt>Question</dt>
+  <dd>What changed?</dd>
+  <dt>Answer</dt>
+  <dd class="fragment">Using <code class="highlighter-rouge">str()</code> shows that the character string <code class="highlighter-rouge">""</code> in the CSV
+file is no longer read into R as missing data (an <code class="highlighter-rouge">NA</code>) but as an empty string.
+The two named “FIPS” columns are now correctly read as strings.</dd>
+</dl>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">acs</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fread</span><span class="p">(</span><span class="w">
+  </span><span class="s1">'data/ACS/sector_ACS_15_5YR_S2413.csv'</span><span class="p">,</span><span class="w">
+  </span><span class="n">colClasses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">FIPS</span><span class="o">=</span><span class="s1">'character'</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">str</span><span class="p">(</span><span class="n">acs</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Classes 'data.table' and 'data.frame':	59698 obs. of  4 variables:
+ $ FIPS         : chr  "01001" "01003" "01005" "01007" ...
+ $ County       : chr  "Autauga County, Alabama" "Baldwin County, Alabama" "Barbour County, Alabama" "Bibb County, Alabama" ...
+ $ Sector       : chr  "agriculture forestry fishing and hunting" "agriculture forestry fishing and hunting" "agriculture forestry fishing and hunting" "agriculture forestry fishing and hunting" ...
+ $ median_income: int  27235 40017 32260 22240 21260 30469 33300 39784 40417 20370 ...
+ - attr(*, ".internal.selfref")=&lt;externalptr&gt; 
+</code></pre></div></div>
+
+<p>The two datasets both contain economic variables for each U.S. county and
+specified by different categories of industry. The data could potentially be
+manipulated into a single table reflecting the follow statistical model.</p>
+
+<script type="math/tex; mode=display">median\_income \sim industry + establishment\_size</script>
+
+<p class="ToS"><a href="#/slides/data">Top of Section</a></p>
+
+<hr />
+<p><a name="/slides/dplyr"></a></p>
+
+<h2 id="dplyr-functions">dplyr Functions</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Function</th>
+      <th>Returns</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="highlighter-rouge">filter</code></td>
+      <td>keep rows that satisfy conditions</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">mutate</code></td>
+      <td>apply a transformation to existing [split] columns</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">select</code></td>
+      <td>keep columns with matching names</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">inner_join</code></td>
+      <td>merge columns from separate tables into one table</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">group_by</code></td>
+      <td>split data into groups by an existing factor</td>
+    </tr>
+    <tr>
+      <td><code class="highlighter-rouge">summarize</code></td>
+      <td>summarize across rows [and combine split groups]</td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="notes">The table above summarizes the most commonly used functions in
+<a href="" class="rlib">dplyr</a>, which we will demonstrate in turn on data from the U.S.
+Census Bureau.</p>
+
+<h3 id="filter">Filter</h3>
+
+<p>The <code class="highlighter-rouge">cbp</code> table includes character <code class="highlighter-rouge">NAICS</code> column. Of the 2 million
+observations, lets see how many observations are left when we keep only the
+2-digit NAICS codes, representing high-level sectors of the economy.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span><span class="w">
+</span><span class="n">cbp2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="n">cbp</span><span class="p">,</span><span class="w">
+  </span><span class="n">grepl</span><span class="p">(</span><span class="s1">'----'</span><span class="p">,</span><span class="w"> </span><span class="n">NAICS</span><span class="p">),</span><span class="w">
+  </span><span class="o">!</span><span class="n">grepl</span><span class="p">(</span><span class="s1">'------'</span><span class="p">,</span><span class="w"> </span><span class="n">NAICS</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">str</span><span class="p">(</span><span class="n">cbp2</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>'data.frame':	58901 obs. of  26 variables:
+ $ FIPSTATE: chr  "01" "01" "01" "01" ...
+ $ FIPSCTY : chr  "001" "001" "001" "001" ...
+ $ NAICS   : chr  "11----" "21----" "22----" "23----" ...
+ $ EMPFLAG : chr  "" "" "" "" ...
+ $ EMP_NF  : chr  "H" "H" "H" "G" ...
+ $ EMP     : int  70 82 196 372 971 211 2631 124 73 375 ...
+ $ QP1_NF  : chr  "H" "H" "H" "G" ...
+ $ QP1     : int  790 713 4793 2891 15386 2034 14905 1229 924 4201 ...
+ $ AP_NF   : chr  "H" "H" "H" "G" ...
+ $ AP      : int  3566 3294 18611 13801 64263 11071 61502 5128 3407 16328 ...
+ $ EST     : int  7 3 9 75 24 29 169 16 9 67 ...
+ $ N1_4    : int  5 0 2 51 9 18 68 9 5 41 ...
+ $ N5_9    : int  1 1 1 13 4 6 41 4 1 18 ...
+ $ N10_19  : int  0 1 2 7 4 2 34 1 1 6 ...
+ $ N20_49  : int  0 0 3 4 3 3 11 2 2 2 ...
+ $ N50_99  : int  1 1 1 0 3 0 11 0 0 0 ...
+ $ N100_249: int  0 0 0 0 0 0 3 0 0 0 ...
+ $ N250_499: int  0 0 0 0 0 0 1 0 0 0 ...
+ $ N500_999: int  0 0 0 0 1 0 0 0 0 0 ...
+ $ N1000   : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_1 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_2 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_3 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_4 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ CENSTATE: int  63 63 63 63 63 63 63 63 63 63 ...
+ $ CENCTY  : int  1 1 1 1 1 1 1 1 1 1 ...
+ - attr(*, ".internal.selfref")=&lt;externalptr&gt; 
+</code></pre></div></div>
+
+<p class="notes">Note that a logical “and” is implied when conditions are separated by commas.
+(This is perhaps the main way in which <code class="highlighter-rouge">filter</code> differs from the base R <code class="highlighter-rouge">subset</code>
+function.) Therefore, the example above is equivalent to <code class="highlighter-rouge">filter(grepl('----',
+NAICS), !grepl('------', NAICS)</code>. A logical “or”, on the other hand, must be
+specified explicitly with the <code class="highlighter-rouge">|</code> operator.</p>
+
+<p>The <a href="" class="rlib">stringr</a> package makes the use of pattern matching by <a href="https://stringr.tidyverse.org/articles/regular-expressions.html">regular
+expressions</a> a bit more maneageble, and streamlines this step.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">stringr</span><span class="p">)</span><span class="w">
+</span><span class="n">cbp2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="n">cbp</span><span class="p">,</span><span class="w">
+  </span><span class="n">str_detect</span><span class="p">(</span><span class="n">NAICS</span><span class="p">,</span><span class="w"> </span><span class="s1">'[0-9]{2}----'</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="mutate">Mutate</h3>
+
+<p>The <code class="highlighter-rouge">mutate</code> function is the <a href="" class="rlib">dplyr</a> answer to updating or altering
+your columns. It performs arbitrary operations on existing columns and appends
+the result as a new column of the same length.</p>
+
+<p>Here’s one you’ve probably needed before:</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">cbp3</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mutate</span><span class="p">(</span><span class="n">cbp2</span><span class="p">,</span><span class="w">
+  </span><span class="n">FIPS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">str_c</span><span class="p">(</span><span class="n">FIPSTATE</span><span class="p">,</span><span class="w"> </span><span class="n">FIPSCTY</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Multiple arguments to <code class="highlighter-rouge">mutate</code> produce multiple transformations.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">cbp3</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mutate</span><span class="p">(</span><span class="n">cbp2</span><span class="p">,</span><span class="w">
+  </span><span class="n">FIPS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">str_c</span><span class="p">(</span><span class="n">FIPSTATE</span><span class="p">,</span><span class="w"> </span><span class="n">FIPSCTY</span><span class="p">),</span><span class="w">
+  </span><span class="n">NAICS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">str_remove</span><span class="p">(</span><span class="n">NAICS</span><span class="p">,</span><span class="w"> </span><span class="s1">'-+'</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="chaining-functions">Chaining Functions</h3>
+
+<p>All the functions from the <a href="" class="rpkg">dplyr</a> package take a data frame as their
+first argument, and they return a data frame. This consistent syntax is on
+purpose. It is designed for easily chaining data transformations together:
+creating a data pipeline that is easy to read and modify.</p>
+
+<p>The “pipe” operator (<code class="highlighter-rouge">%&gt;%</code>) takes the expression on its left-hand side and
+inserts it, as the first argument, into the function on its right-hand side.
+Equivalent to <code class="highlighter-rouge">sum(c(1,3,5))</code>, for example, we have:</p>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">sum</span><span class="p">()</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 9
+</code></pre></div></div>
+
+<p>Additional arguments are accepted—the pipe only handles the first.</p>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="kc">NA</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">na.rm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1] 9
+</code></pre></div></div>
+
+<p>The pipe operator’s main utility is to condense a chain of operations applied to
+the same piece of data, when you don’t want any intermediate results. We
+can do the <code class="highlighter-rouge">filter</code> and <code class="highlighter-rouge">mutate</code> operations from above with one assignment.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">cbp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">cbp</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">filter</span><span class="p">(</span><span class="w">
+    </span><span class="n">str_detect</span><span class="p">(</span><span class="n">NAICS</span><span class="p">,</span><span class="w"> </span><span class="s1">'[0-9]{2}----'</span><span class="p">)</span><span class="w">
+  </span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">mutate</span><span class="p">(</span><span class="w">
+    </span><span class="n">FIPS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">str_c</span><span class="p">(</span><span class="n">FIPSTATE</span><span class="p">,</span><span class="w"> </span><span class="n">FIPSCTY</span><span class="p">),</span><span class="w">
+    </span><span class="n">NAICS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">str_remove</span><span class="p">(</span><span class="n">NAICS</span><span class="p">,</span><span class="w"> </span><span class="s1">'-+'</span><span class="p">)</span><span class="w">
+  </span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<h3 id="select">Select</h3>
+
+<p>To keep particular columns of a data frame (rather than filtering rows), use
+the <code class="highlighter-rouge">select</code> function with arguments that match column names.</p>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="nf">names</span><span class="p">(</span><span class="n">cbp</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code> [1] "FIPSTATE" "FIPSCTY"  "NAICS"    "EMPFLAG"  "EMP_NF"   "EMP"     
+ [7] "QP1_NF"   "QP1"      "AP_NF"    "AP"       "EST"      "N1_4"    
+[13] "N5_9"     "N10_19"   "N20_49"   "N50_99"   "N100_249" "N250_499"
+[19] "N500_999" "N1000"    "N1000_1"  "N1000_2"  "N1000_3"  "N1000_4" 
+[25] "CENSTATE" "CENCTY"   "FIPS"    
+</code></pre></div></div>
+
+<p>One way to “match” is by including complete names, each one you want to keep:</p>
+
+<div class="language-r no-eval input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">cbp</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+</span><span class="o">+</span><span class="w">   </span><span class="n">select</span><span class="p">(</span><span class="w">
+</span><span class="o">+</span><span class="w">     </span><span class="n">FIPS</span><span class="p">,</span><span class="w">
+</span><span class="o">+</span><span class="w">     </span><span class="n">NAICS</span><span class="p">,</span><span class="w">
+</span><span class="o">+</span><span class="w">     </span><span class="n">N</span><span class="m">1</span><span class="err">_</span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="m">5</span><span class="err">_</span><span class="m">9</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="m">10</span><span class="err">_</span><span class="m">19</span><span class="w"> </span><span class="c1"># a better way?</span><span class="w">
+</span><span class="o">+</span><span class="w">   </span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Alternatively, we can use a “<a href="https://dplyr.tidyverse.org/reference/select.html#useful-functions">select helper</a>” to match patterns.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">cbp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">cbp</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">select</span><span class="p">(</span><span class="w">
+    </span><span class="n">FIPS</span><span class="p">,</span><span class="w">
+    </span><span class="n">NAICS</span><span class="p">,</span><span class="w">
+    </span><span class="n">starts_with</span><span class="p">(</span><span class="s1">'N'</span><span class="p">)</span><span class="w">
+  </span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p class="ToS"><a href="#/slides/dplyr">Top of Section</a></p>
+
+<hr />
+<p><a name="/slides/join"></a></p>
+
+<h2 id="join">Join</h2>
+
+<p>The CBP dataset uses FIPS to identify U.S. counties and NAICS codes to identify
+types of industry. The ACS dataset also uses FIPS but their data may aggregate
+across multiple NAICS codes representing a single industry sector.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">sector</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fread</span><span class="p">(</span><span class="w">
+  </span><span class="s1">'data/ACS/sector_naics.csv'</span><span class="p">,</span><span class="w">
+  </span><span class="n">colClasses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="n">NAICS</span><span class="o">=</span><span class="s1">'character'</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="language-r no-eval input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">View</span><span class="p">(</span><span class="n">sector</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p class="notes">Probably the primary challenge in combining secondary datasets for synthesis
+research is dealing with their different sampling frames. A very common issue is
+that data are collected at different “scales”, with one dataset being at higher
+spatial or temporal resolution than another. The differences between the CBP and
+ACS categories of industry present a similar problem, and require the same
+solution of re-aggregating data at the “lower resolution”.</p>
+
+<h3 id="many-to-one">Many-to-One</h3>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">cbp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">cbp</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">inner_join</span><span class="p">(</span><span class="n">sector</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Joining, by = "NAICS"
+</code></pre></div></div>
+
+<div class="language-r no-eval input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">View</span><span class="p">(</span><span class="n">cbp</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/census-data-manipulation-in-R-lesson@v0.2/docs/assets/images/many-to-one.svg" alt="" width="80%" /></p>
+
+<p class="notes">The NAICS field in the <code class="highlighter-rouge">cbp</code> table can have the same value multiple times, it is
+not a primary key in this table. In the <code class="highlighter-rouge">sector</code> table, the NAICS field is the
+primary key uniquely identifying each record. The type of relationship between
+these tables is therefore “many-to-one”.</p>
+
+<dl>
+  <dt>Question</dt>
+  <dd>Note that we lost a couple thousand rows through this join. How could
+<code class="highlighter-rouge">cbp</code> have fewer rows after a join on NAICS codes?</dd>
+  <dt>Answer</dt>
+  <dd class="fragment">The CBP data contains an NAICS code not mapped to a sector—the
+“error code” 99 is not present in <code class="highlighter-rouge">sector</code>. The use of “error codes” that
+could easilly be mistaken for data is frowned upon.</dd>
+</dl>
+
+<h2 id="group-by">Group By</h2>
+
+<p>A very common data manipulation procedure know as “split-apply-combine” tackles
+the problem of applying the same transformation to subsets of data while keeping
+the result all together. We need the total number of establishments
+in each size class <em>aggregated within</em> each county and industry sector.</p>
+
+<p>The dplyr function <code class="highlighter-rouge">group_by</code> begins the process by indicating how the data
+frame should be split into subsets.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">cbp_grouped</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">cbp</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">group_by</span><span class="p">(</span><span class="n">FIPS</span><span class="p">,</span><span class="w"> </span><span class="n">Sector</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>At this point, nothing has really changed:</p>
+
+<div class="language-r input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">str</span><span class="p">(</span><span class="n">cbp_grouped</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Classes 'grouped_df', 'tbl_df', 'tbl' and 'data.frame':	56704 obs. of  16 variables:
+ $ FIPS    : chr  "01001" "01001" "01001" "01001" ...
+ $ NAICS   : chr  "11" "21" "22" "23" ...
+ $ N1_4    : int  5 0 2 51 9 18 68 9 5 41 ...
+ $ N5_9    : int  1 1 1 13 4 6 41 4 1 18 ...
+ $ N10_19  : int  0 1 2 7 4 2 34 1 1 6 ...
+ $ N20_49  : int  0 0 3 4 3 3 11 2 2 2 ...
+ $ N50_99  : int  1 1 1 0 3 0 11 0 0 0 ...
+ $ N100_249: int  0 0 0 0 0 0 3 0 0 0 ...
+ $ N250_499: int  0 0 0 0 0 0 1 0 0 0 ...
+ $ N500_999: int  0 0 0 0 1 0 0 0 0 0 ...
+ $ N1000   : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_1 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_2 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_3 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ N1000_4 : int  0 0 0 0 0 0 0 0 0 0 ...
+ $ Sector  : chr  "agriculture forestry fishing and hunting" "mining quarrying and oil and gas extraction" "utilities" "construction" ...
+ - attr(*, "groups")=Classes 'tbl_df', 'tbl' and 'data.frame':	56704 obs. of  3 variables:
+  ..$ FIPS  : chr  "01001" "01001" "01001" "01001" ...
+  ..$ Sector: chr  "accommodation and food services" "administrative and support and waste management and remediation services" "agriculture forestry fishing and hunting" "arts entertainment and recreation" ...
+  ..$ .rows :List of 56704
+  .. ..$ : int 18
+  .. ..$ : int 14
+  .. ..$ : int 1
+  .. ..$ : int 17
+  .. ..$ : int 4
+  .. ..$ : int 15
+  .. ..$ : int 10
+  .. ..$ : int 16
+  .. ..$ : int 9
+  .. ..$ : int 13
+  .. ..$ : int 5
+  .. ..$ : int 2
+  .. ..$ : int 19
+  .. ..$ : int 12
+  .. ..$ : int 11
+  .. ..$ : int 7
+  .. ..$ : int 8
+  .. ..$ : int 3
+  .. ..$ : int 6
+  .. ..$ : int 37
+  .. ..$ : int 33
+  .. ..$ : int 20
+  .. ..$ : int 36
+  .. ..$ : int 23
+  .. ..$ : int 34
+  .. ..$ : int 29
+  .. ..$ : int 35
+  .. ..$ : int 28
+  .. ..$ : int 32
+  .. ..$ : int 24
+  .. ..$ : int 21
+  .. ..$ : int 38
+  .. ..$ : int 31
+  .. ..$ : int 30
+  .. ..$ : int 26
+  .. ..$ : int 27
+  .. ..$ : int 22
+  .. ..$ : int 25
+  .. ..$ : int 55
+  .. ..$ : int 51
+  .. ..$ : int 39
+  .. ..$ : int 54
+  .. ..$ : int 42
+  .. ..$ : int 52
+  .. ..$ : int 48
+  .. ..$ : int 53
+  .. ..$ : int 47
+  .. ..$ : int 43
+  .. ..$ : int 40
+  .. ..$ : int 56
+  .. ..$ : int 50
+  .. ..$ : int 49
+  .. ..$ : int 45
+  .. ..$ : int 46
+  .. ..$ : int 41
+  .. ..$ : int 44
+  .. ..$ : int 74
+  .. ..$ : int 70
+  .. ..$ : int 57
+  .. ..$ : int 73
+  .. ..$ : int 60
+  .. ..$ : int 71
+  .. ..$ : int 66
+  .. ..$ : int 72
+  .. ..$ : int 65
+  .. ..$ : int 69
+  .. ..$ : int 61
+  .. ..$ : int 58
+  .. ..$ : int 75
+  .. ..$ : int 68
+  .. ..$ : int 67
+  .. ..$ : int 63
+  .. ..$ : int 64
+  .. ..$ : int 59
+  .. ..$ : int 62
+  .. ..$ : int 93
+  .. ..$ : int 89
+  .. ..$ : int 76
+  .. ..$ : int 92
+  .. ..$ : int 79
+  .. ..$ : int 90
+  .. ..$ : int 85
+  .. ..$ : int 91
+  .. ..$ : int 84
+  .. ..$ : int 88
+  .. ..$ : int 80
+  .. ..$ : int 77
+  .. ..$ : int 94
+  .. ..$ : int 87
+  .. ..$ : int 86
+  .. ..$ : int 82
+  .. ..$ : int 83
+  .. ..$ : int 78
+  .. ..$ : int 81
+  .. ..$ : int 111
+  .. ..$ : int 107
+  .. ..$ : int 95
+  .. ..$ : int 110
+  .. ..$ : int 97
+  .. .. [list output truncated]
+  ..- attr(*, ".drop")= logi TRUE
+</code></pre></div></div>
+
+<p class="notes">The <code class="highlighter-rouge">group_by</code> statement does not change any values in the data frame; it only
+adds attributes to the the original data frame. You can add multiple variables
+(separated by commas) in <code class="highlighter-rouge">group_by</code>; each distinct combination of values across
+these columns defines a different group.</p>
+
+<h2 id="summarize">Summarize</h2>
+
+<p>The operation to perform on each group is summing: we need to sum the number of
+establishments in each group. Using <a href="" class="rlib">dplyr</a> functions, the summaries
+are automically combined into a data frame.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">cbp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">cbp</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">group_by</span><span class="p">(</span><span class="n">FIPS</span><span class="p">,</span><span class="w"> </span><span class="n">Sector</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">select</span><span class="p">(</span><span class="n">starts_with</span><span class="p">(</span><span class="s1">'N'</span><span class="p">),</span><span class="w"> </span><span class="o">-</span><span class="n">NAICS</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">summarize_all</span><span class="p">(</span><span class="n">sum</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Adding missing grouping variables: `FIPS`, `Sector`
+</code></pre></div></div>
+
+<p class="notes">The “combine” part of “split-apply-combine” occurs automatically, when the
+attributes introduced by <code class="highlighter-rouge">group_by</code> are dropped. You can see attributes either
+by running the <code class="highlighter-rouge">str()</code> function on the data frame or by inspecting it in the
+RStudio <em>Environment</em> pane.</p>
+
+<p><img src="https://cdn.jsdelivr.net/gh/sesync-ci/census-data-manipulation-in-R-lesson@v0.2/docs/assets/images/one-to-one.svg" alt="" width="80%" /></p>
+
+<p class="notes">There is now a one-to-one relationship between <code class="highlighter-rouge">cbp</code> and <code class="highlighter-rouge">acs</code>, based on
+the combination of FIPS and Sector as the primary key for both tables.</p>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">acs_cbp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">cbp</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">inner_join</span><span class="p">(</span><span class="n">acs</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Joining, by = c("FIPS", "Sector")
+</code></pre></div></div>
+
+<p class="notes">Again, however, the one-to-one relationship does not mean all rows are preserved
+by the join. The specific nature of the <code class="highlighter-rouge">inner_join</code> is to keep all rows, even
+duplicating rows if the relationship is many-to-one, where there are matching
+values in both tables, and discarding the rest.</p>
+
+<p>The <code class="highlighter-rouge">acs_cbp</code> table now includes the <code class="highlighter-rouge">median_income</code> variable from the ACS and
+appropriatey aggregated establishment size information (the number of
+establishments by employee bins) from the CBP table.</p>
+
+<div class="language-r no-eval input highlighter-rouge" title="Console"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">View</span><span class="p">(</span><span class="n">acs_cbp</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p class="ToS"><a href="#/slides/join">Top of Section</a></p>
+
+<hr />
+<p><a name="/slides/conclude"></a></p>
+
+<h2 id="additional-resources">Additional Resources</h2>
+
+<p>The following cheat sheets and tutorials repeat much of this lesson, but also
+provide information on additional functions for “data wrangling”.</p>
+
+<ul>
+  <li><a href="https://github.com/rstudio/cheatsheets/raw/master/data-transformation.pdf">Data Transformation Cheat Sheet</a></li>
+  <li><a href="https://datascienceplus.com/data-manipulation-with-tidyr/">Data manipulation with tidyr</a></li>
+  <li><a href="https://www.rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf">Regular Expressions Cheat Sheet</a></li>
+</ul>
+
+<p class="notes">The first is one of several cheat sheets created by RStudio, and
+provides a handy, visual summary of all the key functions discussed in this
+lesson. It also lists some of the auxiliary functions that can be used within
+each type of expression, e.g. aggregation functions for summarize, “moving
+window” functions for mutate, etc.</p>
+
+<p class="ToS"><a href="#/slides/conclude">Top of Section</a></p>
+
+<hr />
+<p><a name="/slides/exercise"></a></p>
+
+<h2 id="exercises">Exercises</h2>
+
+<h3 id="exercise-1">Exercise 1</h3>
+
+<p>Now that we have a tidy form of <code class="highlighter-rouge">survey</code>, convert it to a <code class="highlighter-rouge">long_survey</code> data
+frame using <code class="highlighter-rouge">gather</code>. The only difference between <code class="highlighter-rouge">survey</code> and <code class="highlighter-rouge">long_survey</code>
+should be an additional row for zero income.</p>
+
+<p class="notes"><a href="#solution-1">View solution</a></p>
+
+<h3 id="exercise-2">Exercise 2</h3>
+
+<p>Use <code class="highlighter-rouge">filter</code> and <code class="highlighter-rouge">select</code> to return just the annual payroll data for the top
+level construction sector (“23—-“).</p>
+
+<p class="notes"><a href="#solution-2">View solution</a></p>
+
+<h3 id="exercise-3">Exercise 3</h3>
+
+<p>Write code to create a data frame giving, for each state, the number of counties
+in the CBP survey with establishements in mining or oil and gas extraction
+(‘21—-‘) along with their total employment (“EMP”). Group the data using
+<em>both</em> <code class="highlighter-rouge">FIPSTATE</code> and <code class="highlighter-rouge">FIPSCTY</code> and use the fact that one call to <code class="highlighter-rouge">summarize</code>
+only combines across the lowest level of grouping. The <a href="" class="rlib">dplyr</a>
+function <code class="highlighter-rouge">n</code> counts rows in a group.</p>
+
+<p class="notes"><a href="#solution-3">View solution</a></p>
+
+<h3 id="exercise-4">Exercise 4</h3>
+
+<p>A “pivot table” is a transformation of tidy data into a wide summary table.
+First, data are summarized by <em>two</em> grouping factors, then one of these is
+“pivoted” into columns. Starting from a filtered CBP data file, chain a
+split-apply-combine procedure into the <a href="" class="rlib">tidyr</a> function <code class="highlighter-rouge">spread</code> to
+get the total number of employees (“EMP”) in each state (as rows) by 2-digit
+NAICS code (as columns).</p>
+
+<h2 id="solutions">Solutions</h2>
+
+<h3 id="solution-1">Solution 1</h3>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">gather</span><span class="p">(</span><span class="n">tidy_survey</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"attr"</span><span class="p">,</span><span class="w">
+  </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"val"</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">participant</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<div class="output highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  participant    attr val
+1           1     age  24
+2           2     age  57
+3           3     age  13
+4           1  income  30
+5           2  income  60
+6           3  income   0
+</code></pre></div></div>
+
+<p class="notes"><a href="#exercise-1">Return</a></p>
+
+<h3 id="solution-2">Solution 2</h3>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">cbp_23</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fread</span><span class="p">(</span><span class="s1">'data/cbp15co.csv'</span><span class="p">,</span><span class="w"> </span><span class="n">na.strings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">''</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">filter</span><span class="p">(</span><span class="n">NAICS</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">'23----'</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">select</span><span class="p">(</span><span class="n">starts_with</span><span class="p">(</span><span class="s1">'FIPS'</span><span class="p">),</span><span class="w"> </span><span class="n">starts_with</span><span class="p">(</span><span class="s1">'AP'</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
+
+<p class="notes"><a href="#exercise-2">Return</a></p>
+
+<h3 id="solution-3">Solution 3</h3>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">cbp_21</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fread</span><span class="p">(</span><span class="s1">'data/cbp15co.csv'</span><span class="p">,</span><span class="w"> </span><span class="n">na.strings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">''</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">filter</span><span class="p">(</span><span class="n">NAICS</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">'21----'</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">group_by</span><span class="p">(</span><span class="n">FIPSTATE</span><span class="p">,</span><span class="w"> </span><span class="n">FIPSCTY</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">summarize</span><span class="p">(</span><span class="n">EMP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">EMP</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">summarize</span><span class="p">(</span><span class="n">EMP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">EMP</span><span class="p">),</span><span class="w"> </span><span class="n">counties</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">())</span><span class="w">
+</span></code></pre></div></div>
+
+<p class="notes"><a href="#exercise-3">Return</a></p>
+
+<h3 id="solution-4">Solution 4</h3>
+
+<div class="language-r text-document highlighter-rouge" title="worksheet-4.R"><div class="highlight"><pre class="highlight"><code><span class="n">pivot</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fread</span><span class="p">(</span><span class="s1">'data/cbp15co.csv'</span><span class="p">,</span><span class="w"> </span><span class="n">na.strings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">''</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">filter</span><span class="p">(</span><span class="n">str_detect</span><span class="p">(</span><span class="n">NAICS</span><span class="p">,</span><span class="w"> </span><span class="s1">'[0-9]{2}----'</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">group_by</span><span class="p">(</span><span class="n">FIPSTATE</span><span class="p">,</span><span class="w"> </span><span class="n">NAICS</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">summarize</span><span class="p">(</span><span class="n">EMP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">EMP</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">spread</span><span class="p">(</span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NAICS</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EMP</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p class="notes"><a href="#exercise-4">Return</a></p>
+
+<p class="ToS"><a href="#/slides/exercise">Top of Section</a></p>
+
+
+
+        <hr>
+
+<p>If you need to catch-up before a section of code will work, just squish it's
+🍅 to copy code above it into your clipboard. Then paste into your interpreter's
+console, run, and you'll be ready to start in on that section. Code copied by
+both 🍅 and 📋 will also appear below, where you can edit first, and then copy,
+paste, and run again.</p>
+
+<div class="output">
+  <pre id="ketchup" contenteditable="true"><code># Nothing here yet!</code></pre>
+</div>
+
+<script>
+$(document).ready(function(){
+  
+  // Add code help icons to code blocks
+  $('.input, .text-document').append('<ul class="code-help">');
+  $('.code-help')
+    .append('<li class="clipboard">📋</li>');
+  $('.text-document:not(.no-eval) .code-help')
+    .append('<li class="ketchup">🍅</li>');
+
+  // Bind copy actions to mouse clicks on icons
+  var $ketchup = $('#ketchup');
+  var rng = document.createRange();
+  var sel = window.getSelection();
+  $('.ketchup').click(function(){
+    var $prev = $(this)
+      .parents('.text-document')
+      .prevAll('.text-document:has(.ketchup)');
+    $ketchup.find('code').text($prev.find('pre').text());
+    rng.selectNodeContents($ketchup[0]);
+    sel.removeAllRanges();
+    sel.addRange(rng);
+    document.execCommand("copy");
+    sel.removeAllRanges();
+  });
+  $('.text-document .clipboard').click(function(){
+    var pre = $(this).parents('.text-document').find('pre').text();
+    $ketchup.find('code').text(pre);
+    rng.selectNodeContents($ketchup[0]);
+    sel.removeAllRanges();
+    sel.addRange(rng);
+    document.execCommand("copy");
+    sel.removeAllRanges();
+  });
+  $('.input .clipboard').click(function(){
+    var pre = $(this).parents('.input').find('pre').text();
+    pre = pre.replace(/(^|\n)[>+] /g, '$1');
+    $ketchup.find('code').text(pre);
+    rng.selectNodeContents($ketchup[0]);
+    sel.removeAllRanges();
+    sel.addRange(rng);
+    document.execCommand("copy");
+    sel.removeAllRanges();
+  });
+});
+</script>
+      </div>
+    </div>
+    <script>
+$(document).ready(function(){
+  // Add links to R and Python package repositories
+  $('a.rlib').map(function(){
+    this.href = 'https://cran.r-project.org/package=' + this.innerText;
+  });
+  $('a.pylib').map(function(){
+    this.href = 'https://pypi.python.org/pypi/' + this.innerText;
+  });
+});
+</script>
+
+  </body>
+</html>
