@@ -35,12 +35,12 @@ species_month_prop
 
 ===
 
-To complete the pivot table, however, the `species_month_prop` values must be copied into a R data.frame using `collect` for processing with `spread`. There is no SQL equivalent for what `spread` does.
+To complete the pivot table, however, the `species_month_prop` values must be copied into a R data.frame using `collect` for processing with `pivot_wider`. There is no SQL equivalent for what `pivot_wider` does.
 
 ```{r handout = 0}
 pivot <- species_month_prop %>%
   collect() %>%
-  spread(month, prop, fill = 0)
+  pivot_wider(month, prop, values_fill = list(prop = 0))
 ```
 
 ===

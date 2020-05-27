@@ -7,15 +7,15 @@ block, drug, control, placebo
     3, 0.42,    0.19,    0.40
 ")
 
-## Gather 
+## Pivot wide to long 
 
 library(tidyr)
 tidy_trial <- ...(trial,
-  key = ...,
-  value = ...,
-  ...)
+                  cols = ...,
+                  names_to = ...,
+                  values_to = ...)
 
-## Spread 
+## Pivot long to wide 
 
 survey <- read.delim(sep = ',', header = TRUE, text = "
 participant,   attr, val
@@ -27,13 +27,13 @@ participant,   attr, val
 ")
 
 tidy_survey <- ...(survey,
-  key = ...,
-  value = ...)
+                   names_from = ...,
+                   values_from = ...)
 
-tidy_survey <- spread(survey,
-  key = attr,
-  value = val,
-  ...)
+tidy_survey <- pivot_wider(survey,
+                           names_from = attr,
+                           values_from = val,
+                           values_fill = list(...))
 
 ## Sample Data 
 

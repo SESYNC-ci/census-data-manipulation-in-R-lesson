@@ -67,13 +67,15 @@ gather(tidy_survey, key = "attr",
 
 
 ~~~
-  participant    attr val
-1           1     age  24
-2           2     age  57
-3           3     age  13
-4           1  income  30
-5           2  income  60
-6           3  income   0
+# A tibble: 6 x 3
+  participant attr     val
+        <int> <chr>  <int>
+1           1 age       24
+2           2 age       57
+3           3 age       13
+4           1 income    30
+5           2 income    60
+6           3 income     0
 ~~~
 {:.output}
 

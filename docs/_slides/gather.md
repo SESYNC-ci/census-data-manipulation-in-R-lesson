@@ -2,26 +2,27 @@
 excerpt: Wide or Long
 ---
 
-## Gather
+## Pivot_longer
 
-The [tidyr](){:.rlib} package's `gather` function reshapes "wide" data frames
+The [tidyr](){:.rlib} package's `pivot_longer` function reshapes "wide" data frames
 into "long" ones.
 
 
 
 ~~~r
 library(tidyr)
-tidy_trial <- gather(trial,
-  key = "treatment",
-  value = "response",
-  -block)
+tidy_trial <- pivot_longer(trial,
+  cols = c(drug, control, placebo),
+  names_to = 'treatment',
+  values_to = 'response')
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
-All columns, accept for "block", are stacked in two columns: a "key" and a
-"value". The key column gets the name `treatment` and the value column reveives
-the name `response`. For each row in the result, the key is taken from the name
+All columns, accept for "block", are stacked in two columns: a "name" and a
+"value". The name column gets the name `treatment` from the `names_to` argument,
+and the `value` column receives the name `response` from the `values_to` argument. 
+For each row in the result, the name is taken from the name
 of the column and the value from the data in the column.
 {:.notes}
 
@@ -36,16 +37,18 @@ of the column and the value from the data in the column.
 
 
 ~~~
+# A tibble: 9 x 3
   block treatment response
-1     1      drug     0.22
-2     2      drug     0.12
-3     3      drug     0.42
-4     1   control     0.58
-5     2   control     0.98
-6     3   control     0.19
-7     1   placebo     0.31
-8     2   placebo     0.47
-9     3   placebo     0.40
+  <int> <chr>        <dbl>
+1     1 drug         0.22 
+2     1 control      0.580
+3     1 placebo      0.31 
+4     2 drug         0.12 
+5     2 control      0.98 
+6     2 placebo      0.47 
+7     3 drug         0.42 
+8     3 control      0.19 
+9     3 placebo      0.4  
 ~~~
 {:.output}
 
@@ -60,7 +63,7 @@ variables without subsetting them from a data frame (i.e. `block` instead of
 
 ===
 
-## Spread
+## Pivot_wider
 
 Data can also fail to be tidy when a table is too long. The
 Entity-Attribute-Value (EAV) structure common in large databases distributes
@@ -93,14 +96,14 @@ structure.
 
 ===
 
-Transform the data with the `spread` function, which "reverses" a `gather`.
+Transform the data with the `pivot_wider` function, which "reverses" a `pivot_longer`.
 
 
 
 ~~~r
-tidy_survey <- spread(survey,
-  key = attr,
-  value = val)
+tidy_survey <- pivot_wider(survey,
+  names_from = attr,
+  values_from = val)
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
@@ -116,10 +119,12 @@ tidy_survey <- spread(survey,
 
 
 ~~~
-  participant     age  income
-1           1      24      30
-2           2      57      60
-3           3      13      NA
+# A tibble: 3 x 3
+  participant   age income
+        <int> <int>  <int>
+1           1    24     30
+2           2    57     60
+3           3    13     NA
 ~~~
 {:.output}
 
@@ -135,10 +140,10 @@ result.
 
 
 ~~~r
-tidy_survey <- spread(survey,
-  key = attr,
-  value = val,
-  fill = 0)
+tidy_survey <- pivot_wider(survey,
+  names_from = attr,
+  values_from = val,
+  values_fill = list(val = 0))
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
@@ -154,10 +159,12 @@ tidy_survey <- spread(survey,
 
 
 ~~~
-  participant     age  income
-1           1      24      30
-2           2      57      60
-3           3      13       0
+# A tibble: 3 x 3
+  participant   age income
+        <int> <int>  <int>
+1           1    24     30
+2           2    57     60
+3           3    13      0
 ~~~
 {:.output}
 

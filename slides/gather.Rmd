@@ -2,22 +2,23 @@
 excerpt: Wide or Long
 ---
 
-## Gather
+## Pivot_longer
 
-The [tidyr](){:.rlib} package's `gather` function reshapes "wide" data frames
+The [tidyr](){:.rlib} package's `pivot_longer` function reshapes "wide" data frames
 into "long" ones.
 
 ```{r handout = 0}
 library(tidyr)
-tidy_trial <- gather(trial,
-  key = "treatment",
-  value = "response",
-  -block)
+tidy_trial <- pivot_longer(trial,
+  cols = c(drug, control, placebo),
+  names_to = 'treatment',
+  values_to = 'response')
 ```
 
-All columns, accept for "block", are stacked in two columns: a "key" and a
-"value". The key column gets the name `treatment` and the value column reveives
-the name `response`. For each row in the result, the key is taken from the name
+All columns, accept for "block", are stacked in two columns: a "name" and a
+"value". The name column gets the name `treatment` from the `names_to` argument,
+and the `value` column receives the name `response` from the `values_to` argument. 
+For each row in the result, the name is taken from the name
 of the column and the value from the data in the column.
 {:.notes}
 
@@ -37,7 +38,7 @@ variables without subsetting them from a data frame (i.e. `block` instead of
 
 ===
 
-## Spread
+## Pivot_wider
 
 Data can also fail to be tidy when a table is too long. The
 Entity-Attribute-Value (EAV) structure common in large databases distributes
@@ -57,7 +58,7 @@ Consider survey data on participant's age and income *stored* in a EAV
 structure.
 
 ```{r, echo = FALSE}
-survey <- read.delim(sep = ',', header = TRUE, text = "
+survey <- read.delim(sep = ',', header = TRUE, strip.white = TRUE, text = "
 participant,   attr, val
 1          ,    age,  24
 2          ,    age,  57
@@ -70,12 +71,12 @@ kable(survey)
 
 ===
 
-Transform the data with the `spread` function, which "reverses" a `gather`.
+Transform the data with the `pivot_wider` function, which "reverses" a `pivot_longer`.
 
 ```{r, handout = 0}
-tidy_survey <- spread(survey,
-  key = attr,
-  value = val)
+tidy_survey <- pivot_wider(survey,
+  names_from = attr,
+  values_from = val)
 ```
 
 ===
@@ -93,10 +94,10 @@ here---perhaps you can supply a value instead of the `NA` in the previous
 result.
 
 ```{r, handout = 0}
-tidy_survey <- spread(survey,
-  key = attr,
-  value = val,
-  fill = 0)
+tidy_survey <- pivot_wider(survey,
+  names_from = attr,
+  values_from = val,
+  values_fill = list(val = 0))
 ```
 
 ===
