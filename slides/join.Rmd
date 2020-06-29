@@ -5,10 +5,11 @@ excerpt: Join and Summarize
 ## Join
 
 The CBP dataset uses FIPS to identify U.S. counties and NAICS codes to identify
-types of industry. The ACS dataset also uses FIPS but their data may aggregate
-across multiple NAICS codes representing a single industry sector.
+types of industry. The ACS dataset also uses FIPS for counties but uses industry sectors instead of NAICS codes. The sectors are broader than the NAICS codes; with multiple NAICS codes representing a single industry sector. To combine the two datasets, we need to relate the NAICS codes to the industry sector. 
 
 ===
+
+A data frame `sector` relates the NAICS codes to the industry sector as used in the CBP dataset. 
 
 ```{r handout = 0}
 sector <- fread(
@@ -30,6 +31,13 @@ solution of re-aggregating data at the "lower resolution".
 ===
 
 ### Many-to-One
+A [dplyr](){:.rlib} `join` function can be used to "join"the `cbp` and `sector` data frames.  
+
+Join commands combine two data frames based on columns in the data frame specified by the `by = ` argument. If no columns are given, the default is to combine using all columns with the same names. In our example, `cbp` and `sector` will join based on the `NAICS` column in each of the data frames.
+{:.notes}
+
+There are multiple types of join commands which differ in how they handle data that is missing in one of the data frames. To combine `cbp` and `sector` we will use `inner_join` which will only include rows that have the same NAICS code in **both** `cbp` and `sector.` Information on the other types of join commands can be found in the dplyr [join documentation] (https://dplyr.tidyverse.org/reference/join.html).
+{:.notes}
 
 ```{r handout = 0}
 cbp <- cbp %>%
@@ -67,7 +75,7 @@ could easilly be mistaken for data is frowned upon.
 
 A very common data manipulation procedure know as "split-apply-combine" tackles
 the problem of applying the same transformation to subsets of data while keeping
-the result all together. We need the total number of establishments
+the result all together. Because there were multiple NAICS codes associated with a `Sector`, there are now multiple rows for a single sector within a county. We need the total number of establishments
 in each size class *aggregated within* each county and industry sector.
 
 ===
@@ -98,9 +106,11 @@ these columns defines a different group.
 
 ## Summarize
 
-The operation to perform on each group is summing: we need to sum the number of
-establishments in each group. Using [dplyr](){:.rlib} functions, the summaries
-are automically combined into a data frame.
+Differents operations can be used on each group. We need to sum the number of
+establishments in each group. 
+
+Using [dplyr](){:.rlib} functions, we group the data by couny and sector (`group_by`), select the columns for number of establishments (`select`) and sum the number of establishments within each group (`summarize_all`).
+{:.notes}
 
 ===
 
@@ -126,6 +136,8 @@ the combination of FIPS and Sector as the primary key for both tables.
 {:.notes}
 
 ===
+
+To finish creating the dataset for the analysis of interest, we now join the `acs` data frame. The two data frames are joined by `FIPS` and `Sector.`
 
 ```{r handout = 0}
 acs_cbp <- cbp %>%
