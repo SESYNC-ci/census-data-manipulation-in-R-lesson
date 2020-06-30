@@ -5,7 +5,9 @@ excerpt: Join and Summarize
 ## Join
 
 The CBP dataset uses FIPS to identify U.S. counties and NAICS codes to identify
-types of industry. The ACS dataset also uses FIPS for counties but uses industry sectors instead of NAICS codes. The sectors are broader than the NAICS codes; with multiple NAICS codes representing a single industry sector. To combine the two datasets, we need to relate the NAICS codes to the industry sector. 
+types of industry. The ACS dataset also uses FIPS for counties but uses industry sectors instead of NAICS codes. The sectors are broader than the NAICS codes; with multiple NAICS codes representing a single industry sector. {:.notes}
+
+To combine the ACS and CBP datasets, we need to relate the NAICS codes to the industry sector. 
 
 ===
 
@@ -39,7 +41,7 @@ solution of re-aggregating data at the "lower resolution".
 ===
 
 ### Many-to-One
-A [dplyr](){:.rlib} `join` function can be used to "join"the `cbp` and `sector` data frames.  
+A [dplyr](){:.rlib} `join` function can be used to "join" the `cbp` and `sector` data frames.  
 
 Join commands combine two data frames based on columns in the data frame specified by the `by = ` argument. If no columns are given, the default is to combine using all columns with the same names. In our example, `cbp` and `sector` will join based on the `NAICS` column in each of the data frames.
 {:.notes}
@@ -73,14 +75,13 @@ Joining, by = "NAICS"
 ===
 
 ![]({% include asset.html path="images/many-to-one.svg" %}){:width="80%"}
+{:.notes}
 
 The NAICS field in the `cbp` table can have the same value multiple times, it is
 not a primary key in this table. In the `sector` table, the NAICS field is the
 primary key uniquely identifying each record. The type of relationship between
 these tables is therefore "many-to-one".
 {:.notes}
-
-===
 
 Question
 : Note that we lost a couple thousand rows through this join. How could
@@ -97,8 +98,11 @@ could easilly be mistaken for data is frowned upon.
 
 A very common data manipulation procedure know as "split-apply-combine" tackles
 the problem of applying the same transformation to subsets of data while keeping
-the result all together. Because there were multiple NAICS codes associated with a `Sector`, there are now multiple rows for a single sector within a county. We need the total number of establishments
+the result all together. 
+
+Because there were multiple NAICS codes associated with a `Sector`, there are now multiple rows for a single sector within a county. We need the total number of establishments
 in each size class *aggregated within* each county and industry sector.
+{:.notes}
 
 ===
 

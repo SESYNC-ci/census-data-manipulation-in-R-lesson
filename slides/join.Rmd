@@ -61,8 +61,6 @@ primary key uniquely identifying each record. The type of relationship between
 these tables is therefore "many-to-one".
 {:.notes}
 
-===
-
 Question
 : Note that we lost a couple thousand rows through this join. How could
 `cbp` have fewer rows after a join on NAICS codes?

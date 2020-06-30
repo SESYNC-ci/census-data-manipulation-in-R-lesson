@@ -6,7 +6,8 @@ excerpt: Wide or Long
 
 The [tidyr](){:.rlib} package can be used to reshape "wide" data frames into "long," tidy data frame. By making each observation a single row, it "lengthens" the data. 
 
-We can use [tidyr](){:.rlib} `pivot_longer` function to reshape the table for drug trial data from above (named `trial`) into a tidy data frame. 
+We can use [tidyr](){:.rlib} `pivot_longer` function to reshape the table for drug trial data from above (named `trial`) into a tidy data frame.
+{:.notes}
 
 
 
@@ -26,8 +27,6 @@ and the `value` column receives the name `response` from the `values_to` argumen
 For each row in the result, the "name" (treatment) is taken from the name
 of the column and the "value" (response) from the data in the column. The resulting table is saved as `tidy_trial`.
 {:.notes}
-
-===
 
 
 
@@ -109,9 +108,8 @@ tidy_survey <- pivot_wider(survey,
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
-The column names for the resulting data frame `tidy_survey` are taken from the `attr` column and the data from the `val` column.  
-
-===
+The column names for the resulting data frame `tidy_survey` are taken from the `attr` column and the data from the `val` column.
+{:.notes}
 
 
 
@@ -135,7 +133,10 @@ The column names for the resulting data frame `tidy_survey` are taken from the `
 ===
 
 One difficulty with EAV tables is the nature of missing data; an entire row
-rather than a single cell is missing. It is important to evaluate how to handle the "missing data." By default, "missing data" is coded as `NA`. The `values_fill` argument allows you to specify values for this missing data. 
+rather than a single cell is missing. It is important to evaluate how to handle the "missing data." By default, "missing data" is coded as `NA`. 
+{:.notes}
+
+The `values_fill` argument allows you to specify values for this missing data. 
 
 
 
@@ -147,8 +148,6 @@ tidy_survey <- pivot_wider(survey,
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
-
-===
 
 
 

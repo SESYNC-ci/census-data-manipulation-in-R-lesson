@@ -44,8 +44,6 @@ library(data.table)
 cbp <- fread('data/cbp15co.csv')
 ```
 
-===
-
 ```{r}
 str(cbp)
 ```

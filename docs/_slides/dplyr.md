@@ -21,8 +21,11 @@ The table above summarizes the most commonly used functions in
 ### Filter
 
 The `cbp` table includes character `NAICS` column for industry codes. NAICS codes can have up to 6 digits. As digits increase, the industry code becomes more specific. Of the 2 million observations, lets see how many observations are left when we keep only the 2-digit NAICS codes, representing high-level, broad sectors of the economy.
+{:.notes}
 
-We will use the `filter` command to only include rows where the NAICS code is 2 digits long. Empty digits are coded as "-"; we only include NAICS codes with 4 dashes using the `grepl` command to find these rows. The filtered data is saved as `cbp2`. 
+We will use the `filter` command to only include rows where the NAICS code is 2 digits long. 
+
+Empty digits are coded as "-"; we only include NAICS codes with 4 dashes using the `grepl` command to find these rows. The filtered data is saved as `cbp2`. 
 {:.notes} 
 
 
@@ -35,8 +38,6 @@ cbp2 <- filter(cbp,
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
-
-===
 
 
 
@@ -145,6 +146,7 @@ cbp3 <- mutate(cbp2,
 
 
 FIPS is a new column. But can also transform the data and rewrite an existing column as done here with NAICS to remove the dashes from the NAICS codes in the `NAICS` column. 
+{:.notes}
 
 ===
 
@@ -159,6 +161,7 @@ creating a data pipeline that is easy to read and modify.
 
 The "pipe" operator (`%>%`) takes the expression on its left-hand side and
 inserts it, as the first argument, into the function on its right-hand side. x %>% function() is equivalent to function(x).
+{:.notes}
 
 
 For example, instead of `sum(c(1,3,5))`, we have:
@@ -198,14 +201,11 @@ Additional arguments can be added to the function---the pipe only handles the fi
 ===
 
 The pipe operator's main utility is to condense a chain of operations applied to the same piece of data, when you don't want any intermediate results. So instead of:
-
 `function_A(function_B(function_C(x)))` 
-
 pipes allow you to do the following:
-
 `x %>% function_A() %>% function_B() %>% function_C()`
+{:.notes}
 
-===
 We can do the `filter` and `mutate` operations from above with one assignment.
 
 
@@ -259,7 +259,7 @@ One way to "match" is by including complete names, each one you want to keep:
 +   select(
 +     FIPS,
 +     NAICS,
-+     N1_4, N5_9, N10_19 # a better way?
++     N1_4, N5_9, N10_19 
 +   )
 ~~~
 {:title="Console" .no-eval .input}
@@ -281,8 +281,6 @@ cbp <- cbp %>%
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
-
-===
 
 The `cbp` data frame now only includes columns that we are interested in for the our analysis: the full FIPS county code, the NAICS industry code, and the number of establishments at different employee size classess. 
 {:.notes}

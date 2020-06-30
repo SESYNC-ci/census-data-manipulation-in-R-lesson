@@ -35,8 +35,6 @@ cbp2 <- filter(cbp,
   !grepl('------', NAICS))
 ```
 
-===
-
 ```{r}
 str(cbp2)
 ```
@@ -134,8 +132,6 @@ The pipe operator's main utility is to condense a chain of operations applied to
 pipes allow you to do the following:
 `x %>% function_A() %>% function_B() %>% function_C()`
 {:.notes}
-
-===
 
 We can do the `filter` and `mutate` operations from above with one assignment.
 

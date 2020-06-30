@@ -24,8 +24,6 @@ For each row in the result, the "name" (treatment) is taken from the name
 of the column and the "value" (response) from the data in the column. The resulting table is saved as `tidy_trial`.
 {:.notes}
 
-===
-
 ```{r}
 tidy_trial
 ```
@@ -84,8 +82,6 @@ tidy_survey <- pivot_wider(survey,
 The column names for the resulting data frame `tidy_survey` are taken from the `attr` column and the data from the `val` column.
 {:.notes}
 
-===
-
 ```{r}
 tidy_survey
 ```
@@ -104,8 +100,6 @@ tidy_survey <- pivot_wider(survey,
   values_from = val,
   values_fill = 0)
 ```
-
-===
 
 ```{r}
 tidy_survey
