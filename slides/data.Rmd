@@ -43,6 +43,9 @@ First, load the CBP data. `fread` from [data.table](){:.rlib} is faster at readi
 library(data.table)
 cbp <- fread('data/cbp15co.csv')
 ```
+
+===
+
 ```{r}
 str(cbp)
 ```

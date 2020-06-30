@@ -15,7 +15,7 @@ To learn about data transformation with dplyr, we need more data. The Census
 Bureau collects subnational economic data for the U.S., releasing annual [County
 Business Patterns (CBP)] datasets including the number of establishments,
 employment, and payroll by industry. They also conduct the [American Community
-Survey (ACS)] and publish, among other demographic and economic variables, estimates of
+Survey (ACS)] and publish, among other demographic and economic variables, such as estimates of
 median income for individuals working in different industries.
 {:.notes}
 
@@ -26,6 +26,18 @@ median income for individuals working in different industries.
 [American Community Survey (ACS)]: https://www.census.gov/programs-surveys/acs/
 
 ===
+
+These two datasets both contain economic variables for each U.S. county 
+specified by different categories of industry. The data could potentially be
+manipulated into a single table reflecting the following statistical model.
+
+$$
+median\_income \sim industry + establishment\_size
+$$
+
+===
+
+First, load the CBP data. `fread` from [data.table](){:.rlib} is faster at reading large data sets than base R `read.csv`.
 
 
 
@@ -76,7 +88,7 @@ Classes 'data.table' and 'data.frame':	2126601 obs. of  26 variables:
 {:.output}
 
 
-See the [CBP dataset documentation] for an explanation of the variables we don't
+The CBP dataset includes NAICS (North American Industry Classification System) industry codes and the number of businesses or establishments of different employee sizes in each US county. States and counties are identified by Federal Information Processing System (FIPS) codes. See the [CBP dataset documentation] for an explanation of the variables we don't
 discuss in this lesson.
 {:.notes}
 
@@ -84,9 +96,7 @@ discuss in this lesson.
 
 ===
 
-Modify the import to clean up this read: consider the data type for FIPS codes
-along with what string in this CSV file represents NAs, a.k.a. data that is
-not-available or missing.
+We need to modify the import to clean up this read. The data type for the state and city codes should be read in as a character type using `colClasses`. We can also specify strings that should be read as missing data or 'NA'. 
 
 
 
@@ -112,6 +122,8 @@ file is no longer read into R as missing data (an `NA`) but as an empty string.
 The two named "FIPS" columns are now correctly read as strings.
 
 ===
+
+Next, load the ACS data. The ACS data we are using in this example includes the median income by industry sector for each US county.
 
 
 
@@ -141,12 +153,4 @@ Classes 'data.table' and 'data.frame':	59698 obs. of  4 variables:
 {:.output}
 
 
-===
 
-The two datasets both contain economic variables for each U.S. county and
-specified by different categories of industry. The data could potentially be
-manipulated into a single table reflecting the follow statistical model.
-
-$$
-median\_income \sim industry + establishment\_size
-$$

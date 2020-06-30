@@ -13,17 +13,17 @@
 | `summarize` | summarize across rows [and combine split groups]   |
 
 The table above summarizes the most commonly used functions in
-[dplyr](){:.rlib}, which we will demonstrate in turn on data from the U.S.
-Census Bureau.
+[dplyr](){:.rlib}. We will use [dplyr](){:.rlib} manipulate data frames with the U.S. Census Bureau data in order to prepare for data analysis.
 {:.notes}
 
 ===
 
 ### Filter
 
-The `cbp` table includes character `NAICS` column. Of the 2 million
-observations, lets see how many observations are left when we keep only the
-2-digit NAICS codes, representing high-level sectors of the economy.
+The `cbp` table includes character `NAICS` column for industry codes. NAICS codes can have up to 6 digits. As digits increase, the industry code becomes more specific. Of the 2 million observations, lets see how many observations are left when we keep only the 2-digit NAICS codes, representing high-level, broad sectors of the economy.
+
+We will use the `filter` command to only include rows where the NAICS code is 2 digits long. Empty digits are coded as "-"; we only include NAICS codes with 4 dashes using the `grepl` command to find these rows. The filtered data is saved as `cbp2`. 
+{:.notes} 
 
 
 
@@ -47,7 +47,7 @@ cbp2 <- filter(cbp,
 
 
 ~~~
-'data.frame':	58901 obs. of  26 variables:
+Classes 'data.table' and 'data.frame':	58901 obs. of  26 variables:
  $ FIPSTATE: chr  "01" "01" "01" "01" ...
  $ FIPSCTY : chr  "001" "001" "001" "001" ...
  $ NAICS   : chr  "11----" "21----" "22----" "23----" ...
@@ -82,13 +82,13 @@ cbp2 <- filter(cbp,
 Note that a logical "and" is implied when conditions are separated by commas.
 (This is perhaps the main way in which `filter` differs from the base R `subset`
 function.) Therefore, the example above is equivalent to `filter(grepl('----',
-NAICS), !grepl('------', NAICS)`. A logical "or", on the other hand, must be
+NAICS) & !grepl('------', NAICS)`. A logical "or", on the other hand, must be
 specified explicitly with the `|` operator.
 {:.notes}
 
 ===
 
-The [stringr](){:.rlib} package makes the use of pattern matching by [regular
+Alternatively, the [stringr](){:.rlib} package makes the use of pattern matching by [regular
 expressions] a bit more maneageble, and streamlines this step.
 
 
@@ -101,6 +101,9 @@ cbp2 <- filter(cbp,
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
+This code only inclues NAICS codes with any 2 numbers followed by 4 dashes. 
+{:.notes}
+
 [regular expressions]: https://stringr.tidyverse.org/articles/regular-expressions.html
 
 ===
@@ -108,12 +111,15 @@ cbp2 <- filter(cbp,
 ### Mutate
 
 The `mutate` function is the [dplyr](){:.rlib} answer to updating or altering
-your columns. It performs arbitrary operations on existing columns and appends
+your columns. It performs operations on existing columns and appends
 the result as a new column of the same length.
 
 ===
 
-Here's one you've probably needed before:
+In the CBP data, FPS codes are split by state and county; however, the convention is to combine into 1 code, concatenating the 2 digit state and 3 digit county code. 
+
+The `mutate` command will add a new column `FIPS` to the cbp2 data frame. Values for the FIPS column will be determined using operation `str_c` from the [stringr](){:.rlib} package. `str_c` combines the FIPS state and county codes. 
+{:.notes}
 
 
 
@@ -138,6 +144,8 @@ cbp3 <- mutate(cbp2,
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
 
+FIPS is a new column. But can also transform the data and rewrite an existing column as done here with NAICS to remove the dashes from the NAICS codes in the `NAICS` column. 
+
 ===
 
 ### Chaining Functions
@@ -150,8 +158,10 @@ creating a data pipeline that is easy to read and modify.
 ===
 
 The "pipe" operator (`%>%`) takes the expression on its left-hand side and
-inserts it, as the first argument, into the function on its right-hand side.
-Equivalent to `sum(c(1,3,5))`, for example, we have:
+inserts it, as the first argument, into the function on its right-hand side. x %>% function() is equivalent to function(x).
+
+
+For example, instead of `sum(c(1,3,5))`, we have:
 
 
 
@@ -169,7 +179,7 @@ Equivalent to `sum(c(1,3,5))`, for example, we have:
 
 ===
 
-Additional arguments are accepted---the pipe only handles the first.
+Additional arguments can be added to the function---the pipe only handles the first argument.
 
 
 
@@ -187,11 +197,16 @@ Additional arguments are accepted---the pipe only handles the first.
 
 ===
 
-The pipe operator's main utility is to condense a chain of operations applied to
-the same piece of data, when you don't want any intermediate results. We
-can do the `filter` and `mutate` operations from above with one assignment.
+The pipe operator's main utility is to condense a chain of operations applied to the same piece of data, when you don't want any intermediate results. So instead of:
+
+`function_A(function_B(function_C(x)))` 
+
+pipes allow you to do the following:
+
+`x %>% function_A() %>% function_B() %>% function_C()`
 
 ===
+We can do the `filter` and `mutate` operations from above with one assignment.
 
 
 
@@ -266,3 +281,8 @@ cbp <- cbp %>%
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
+
+===
+
+The `cbp` data frame now only includes columns that we are interested in for the our analysis: the full FIPS county code, the NAICS industry code, and the number of establishments at different employee size classess. 
+{:.notes}

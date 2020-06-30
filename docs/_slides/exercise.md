@@ -19,7 +19,7 @@ should be an additional row for zero income.
 ### Exercise 2
 
 Use `filter` and `select` to return just the annual payroll data for the top
-level construction sector ("23----").
+level construction sector ("23----"), using data from CBP. Annual payroll information are in columns AP and AP_NF.
 
 [View solution](#solution-2)
 {:.notes}
@@ -30,10 +30,8 @@ level construction sector ("23----").
 
 Write code to create a data frame giving, for each state, the number of counties
 in the CBP survey with establishements in mining or oil and gas extraction
-('21----') along with their total employment ("EMP"). Group the data using
-*both* `FIPSTATE` and `FIPSCTY` and use the fact that one call to `summarize`
-only combines across the lowest level of grouping. The [dplyr](){:.rlib}
-function `n` counts rows in a group.
+('21----') along with their total employment ("EMP"). 
+
 
 [View solution](#solution-3)
 {:.notes}
@@ -44,9 +42,9 @@ function `n` counts rows in a group.
 
 A "pivot table" is a transformation of tidy data into a wide summary table.
 First, data are summarized by *two* grouping factors, then one of these is
-"pivoted" into columns. Starting from a filtered CBP data file, chain a
-split-apply-combine procedure into the [tidyr](){:.rlib} function `spread` to
-get the total number of employees ("EMP") in each state (as rows) by 2-digit
+"pivoted" into columns. Using only data with a 2-digit NAICS code, chain a
+split-apply-combine procedure into a "wide" table to
+get the total number of employees ("EMP") in each state (as rows) by 
 NAICS code (as columns).
 
 ===
@@ -60,26 +58,15 @@ NAICS code (as columns).
 
 
 ~~~r
-gather(tidy_survey, key = "attr",
-  value = "val", -participant)
+long_survey <- pivot_longer(tidy_survey,  
+                            cols=c(age, income), 
+                            values_to = 'val', 
+                            names_to = 'attr', 
+                          )
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
-
-~~~
-# A tibble: 6 x 3
-  participant attr     val
-        <int> <chr>  <int>
-1           1 age       24
-2           2 age       57
-3           3 age       13
-4           1 income    30
-5           2 income    60
-6           3 income     0
-~~~
-{:.output}
-
-
+  
 [Return](#exercise-1)
 {:.notes}
 
@@ -109,11 +96,16 @@ cbp_23 <- fread('data/cbp15co.csv', na.strings = '') %>%
 ~~~r
 cbp_21 <- fread('data/cbp15co.csv', na.strings = '') %>%
   filter(NAICS == '21----') %>%
-  group_by(FIPSTATE, FIPSCTY) %>%
-  summarize(EMP = sum(EMP)) %>%
+  group_by(FIPSTATE) %>%
   summarize(EMP = sum(EMP), counties = n())
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+
+
+~~~
+`summarise()` ungrouping output (override with `.groups` argument)
+~~~
+{:.output}
 
 
 [Return](#exercise-3)
@@ -130,9 +122,15 @@ pivot <- fread('data/cbp15co.csv', na.strings = '') %>%
   filter(str_detect(NAICS, '[0-9]{2}----')) %>%
   group_by(FIPSTATE, NAICS) %>%
   summarize(EMP = sum(EMP)) %>%
-  spread(key = NAICS, value = EMP)
+  pivot_wider(names_from = NAICS, values_from = EMP)
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
+
+
+~~~
+`summarise()` regrouping output by 'FIPSTATE' (override with `.groups` argument)
+~~~
+{:.output}
 
 
 [Return](#exercise-4)
