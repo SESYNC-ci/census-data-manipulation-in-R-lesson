@@ -33,7 +33,7 @@ tidy_survey <- ...(survey,
 tidy_survey <- pivot_wider(survey,
                            names_from = attr,
                            values_from = val,
-                           values_fill = list(...))
+                           values_fill = ...)
 
 ## Sample Data 
 
