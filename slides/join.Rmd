@@ -5,7 +5,8 @@ excerpt: Join and Summarize
 ## Join
 
 The CBP dataset uses FIPS to identify U.S. counties and NAICS codes to identify
-types of industry. The ACS dataset also uses FIPS for counties but uses industry sectors instead of NAICS codes. The sectors are broader than the NAICS codes; with multiple NAICS codes representing a single industry sector. {:.notes}
+types of industry. The ACS dataset also uses FIPS for counties but uses industry sectors instead of NAICS codes. The sectors are broader than the NAICS codes; with multiple NAICS codes representing a single industry sector. 
+{:.notes}
 
 To combine the ACS and CBP datasets, we need to relate the NAICS codes to the industry sector. 
 

@@ -67,7 +67,7 @@ variables without subsetting them from a data frame (i.e. `block` instead of
 
 Data can also fail to be tidy when a table is too long. The
 Entity-Attribute-Value (EAV) structure common in large databases distributes
-multible attributes of a single entity/observation into separate rows.
+multiple attributes of a single entity/observation into separate rows.
 
 Remember that the exact state of "tidy" may depend on the analysis: the key is
 knowing what counts as a complete observation. For example, the community

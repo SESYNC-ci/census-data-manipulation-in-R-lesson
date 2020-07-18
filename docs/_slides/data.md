@@ -97,30 +97,19 @@ discuss in this lesson.
 
 ===
 
-We need to modify the import to clean up this read. The data type for the state and city codes should be read in as a character type using `colClasses`. We can also specify strings that should be read as missing data or 'NA'. 
+We need to modify the import to clean up this read. The data type for the state and city codes should be read in as a character type using `colClasses`. 
 
 
 
 ~~~r
 cbp <- fread(
   'data/cbp15co.csv',
-  na.strings = NULL,
   colClasses = c(
     FIPSTATE='character',
     FIPSCTY='character'))
 ~~~
 {:title="{{ site.data.lesson.handouts[0] }}" .text-document}
 
-
-===
-
-Question
-: What changed?
-
-Answer
-: {:.fragment} Using `str()` shows that the character string `""` in the CSV
-file is no longer read into R as missing data (an `NA`) but as an empty string.
-The two named "FIPS" columns are now correctly read as strings.
 
 ===
 
