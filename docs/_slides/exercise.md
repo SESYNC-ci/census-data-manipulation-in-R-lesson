@@ -8,7 +8,7 @@
 ### Exercise 1
 
 Now that we have a tidy form of `survey`, convert it to a `long_survey` data
-frame using `gather`. The only difference between `survey` and `long_survey`
+frame using `pivot_longer`. The only difference between `survey` and `long_survey`
 should be an additional row for zero income.
 
 [View solution](#solution-1)

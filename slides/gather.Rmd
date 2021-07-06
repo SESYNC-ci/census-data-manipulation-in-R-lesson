@@ -66,7 +66,7 @@ participant,   attr, val
 1          , income,  30
 2          , income,  60
 ")
-kable(survey)
+knitr::kable(survey)
 ```
 
 ===
