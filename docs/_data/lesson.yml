@@ -4,12 +4,13 @@ handouts:
   - data/cbp15co.csv
   - data/ACS
   - data/README.md
-tag: v0.4
+tag: v0.5
 lesson: 4
 instructor: Mary Glover
 lifecycle: stable # status for lifecycle badge
 badgecolor: green # color for lifecycle badge
 warning: false # whether to include note about lifecycle status
+doi: 10.5281/zenodo.5708315
 authors:
   - Philippe Marchand
   - Ian Carroll
